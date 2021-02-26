@@ -1,9 +1,9 @@
 <template>
   <nav>
-    <v-toolbar flat>
-      <v-toolbar-title class="ma-2 text-uppercase grey--text">
-        <span class="font-weight-light">Mess</span>
-        <span>Enger</span>
+    <v-toolbar flat fixed>
+      <v-toolbar-title class="text-uppercase grey--text">
+        <span class="font-weight-light">Мессе</span>
+        <span>нджер</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <a href="#" class="ma-2 text-decoration-none text-uppercase grey--text"
