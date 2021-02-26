@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from messages.views import test
+from messages_api.views import test
 
 
 urlpatterns = [
