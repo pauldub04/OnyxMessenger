@@ -20,6 +20,6 @@ class Message(models.Model):
     text = models.TextField()
     read = models.BooleanField(default=False)
     date = models.DateTimeField(default=0)
-    sender = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    sender = models.IntegerField()
     receiver = models.IntegerField()
 
