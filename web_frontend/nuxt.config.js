@@ -56,6 +56,9 @@ export default {
         },
       },
     },
+    icons: {
+      iconfont: 'mdiSvg',
+    },
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

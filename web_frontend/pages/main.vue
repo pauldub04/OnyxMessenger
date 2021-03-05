@@ -1,39 +1,56 @@
 <template>
   <v-app>
-    <NavBar></NavBar>
     <v-row no-gutters>
       <NavigationDrawer></NavigationDrawer>
-      <v-col cols="3">
-        <v-list outlined height="100%">
-          <div v-for="contact in contacts" :key="contact.id">
-            <ChatPreview
-              :username="contact.username"
-              :user-image="contact.userImage"
-              :last-message="contact.lastMessage"
-              :date-last-message="contact.dateLastMessage"
-              :unread-messages="contact.unreadMessages"
-            ></ChatPreview>
-            <v-divider></v-divider>
-          </div>
-        </v-list>
+      <v-col cols="3" class="grey darken-4">
+        <v-virtual-scroll
+          :items="contacts"
+          :height="windowSize.y"
+          item-height="80"
+        >
+          <template v-slot:default="{ item }">
+            <v-list-item class="ma-2" link>
+              <v-list-item-avatar
+                ><v-img :src="item.userImage"></v-img
+              ></v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.username }}</v-list-item-title>
+                <v-list-item-subtitle>{{
+                  item.lastMessage
+                }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-badge
+                  overlap
+                  :content="item.unreadMessages"
+                  :value="item.unreadMessages"
+                ></v-badge>
+                <v-list-item-action-text>{{
+                  item.dateLastMessage
+                }}</v-list-item-action-text>
+              </v-list-item-action>
+            </v-list-item>
+            <v-divider inset></v-divider>
+          </template>
+        </v-virtual-scroll>
       </v-col>
       <v-col>
-        <v-card height="100%" class="pa-2" outlined tile>
-          .col-12 .col-sm-6 .col-md-8
-        </v-card>
+        <p></p>
       </v-col>
     </v-row>
   </v-app>
 </template>
 
 <script>
-import NavBar from '~/components/NavBar'
 import NavigationDrawer from '~/components/NavigationDrawer'
-import ChatPreview from '~/components/ChatPreview'
 export default {
-  components: { NavBar, NavigationDrawer, ChatPreview },
+  components: { NavigationDrawer },
   data() {
     return {
+      windowSize: {
+        x: 0,
+        y: 0,
+      },
       contacts: [
         {
           id: 1,
@@ -106,5 +123,15 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.onResize()
+  },
+  methods: {
+    onResize() {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+    },
+  },
 }
 </script>
+
+<style></style>
