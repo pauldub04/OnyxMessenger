@@ -3,11 +3,12 @@
     <v-list>
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+          <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
+            <v-avatar class="mr-2" size="33" elevation="10">
+              <v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
+            </v-avatar>
+          </v-badge>
         </v-list-item-avatar>
-        <v-list-item-subtitle class="text-left white--text"
-          >Online</v-list-item-subtitle
-        >
       </v-list-item>
 
       <v-list-item link>
