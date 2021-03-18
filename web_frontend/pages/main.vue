@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-row no-gutters>
-      <NavigationDrawer></NavigationDrawer>
+      <NavigationDrawer :username="username" :email="email"></NavigationDrawer>
       <v-col cols="3" class="grey darken-4">
         <v-list :max-height="height" class="overflow-y-auto dark">
           <v-list-item-group v-model="selectedItem">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mdiAccount } from '@mdi/js'
 import NavigationDrawer from '~/components/NavigationDrawer'
 import Chat from '~/components/Chat'
@@ -165,8 +166,12 @@ export default {
         ],
       },
     ],
+    username: null,
+    email: null,
   }),
   mounted() {
+    // this.getUserData()
+
     this.$nextTick(function () {
       this.onResize()
     })
@@ -187,6 +192,10 @@ export default {
       }
       return counter
     },
+    getUserData() {
+      this.username = sessionStorage.getItem('username')
+      this.email = sessionStorage.getItem('email')
+    }
   },
 }
 </script>
