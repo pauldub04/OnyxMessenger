@@ -7,6 +7,9 @@ export const mutations = {
   setUser(state, user) {
     state.user = user
   },
+  setToken(state, token) {
+    state.token = token;
+  }
 }
 
 export const actions = {
@@ -37,7 +40,14 @@ export const actions = {
     ctx.commit('setUser', {})
     this.$router.push('/auth')
   },
-
+  checkAuth(ctx) {
+    if (sessionStorage.getItem('authToken') !== null)
+      ctx.commit('setToken', sessionStorage.getItem('authToken'))
+  }
 }
 
-export const getters = {}
+export const getters = {
+  isAuth() {
+    return sessionStorage.getItem('authToken') !== null;
+  }
+}

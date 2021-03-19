@@ -63,6 +63,7 @@ import { mdiAccount } from '@mdi/js'
 import NavigationDrawer from '~/components/NavigationDrawer'
 import Chat from '~/components/Chat'
 export default {
+  middleware: 'auth', // check is user auth
   components: { Chat, NavigationDrawer },
   icons: { account: mdiAccount },
   data: () => ({
@@ -171,6 +172,9 @@ export default {
   }),
   mounted() {
     // this.getUserData()
+
+    // in fetches data from sessionStorage to check is user auth
+    this.$store.dispatch('checkAuth') 
 
     this.$nextTick(function () {
       this.onResize()
