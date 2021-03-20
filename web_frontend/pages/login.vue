@@ -16,24 +16,24 @@
                       <v-form>
                         <v-text-field
                           v-model="username"
-                          v-on:keyup.enter="signIn"
                           label="Name"
                           name="name"
                           prepend-icon="person"
                           type="text"
                           color="deep-purple accent-4"
                           required
+                          @keyup.enter="signIn"
                         />
                         <v-text-field
-                          v-model="password"
-                          v-on:keyup.enter="signIn"
                           id="password"
+                          v-model="password"
                           label="Password"
                           name="Password"
                           prepend-icon="lock"
                           type="password"
                           color="deep-purple accent-4"
                           required
+                          @keyup.enter="signIn"
                         />
                       </v-form>
                       <h3 class="text-center mt-3">Forget your password?</h3>
@@ -89,33 +89,33 @@
                       <v-form>
                         <v-text-field
                           v-model="username"
-                          v-on:keyup.enter="signUp"
                           label="Name"
                           name="name"
                           prepend-icon="person"
                           type="text"
                           color="deep-purple accent-4"
                           required
+                          @keyup.enter="signUp"
                         />
                         <v-text-field
                           v-model="email"
-                          v-on:keyup.enter="signUp"
                           label="Email"
                           name="email"
                           prepend-icon="email"
                           type="text"
                           color="deep-purple accent-4"
                           required
+                          @keyup.enter="signUp"
                         />
                         <v-text-field
                           v-model="password"
-                          v-on:keyup.enter="signUp"
                           label="Password"
                           name="password"
                           prepend-icon="lock"
                           type="password"
                           color="deep-purple accent-4"
                           required
+                          @keyup.enter="signUp"
                         />
                       </v-form>
                     </v-card-text>
@@ -141,7 +141,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
   // middleware: 'toMain', // check is user auth
   props: {
@@ -156,6 +155,7 @@ export default {
     password: '',
   }),
   mounted() {
+    // eslint-disable-next-line no-console
     console.log(this.$store.getters.getToken)
   },
   methods: {

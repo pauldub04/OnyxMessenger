@@ -61,7 +61,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { mdiAccount } from '@mdi/js'
 import NavigationDrawer from '~/components/NavigationDrawer'
 import Chat from '~/components/Chat'
