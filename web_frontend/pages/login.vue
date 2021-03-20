@@ -143,62 +143,37 @@
 <script>
 /* eslint-disable */
 export default {
+  // middleware: 'toMain', // check is user auth
   props: {
     source: String,
   },
 
   data: () => ({
-    step: 2,
+    step: 1,
 
     email: '',
     username: '',
     password: '',
   }),
-
+  mounted() {
+    console.log(this.$store.getters.getToken)
+  },
   methods: {
     signUp() {
-      const credentials = {
+      this.$store.dispatch('signUp', {
         email: this.email,
         username: this.username,
         password: this.password,
-      }
-
-      this.$axios
-        .post('http://localhost:8000/auth/users/', credentials)
-        .then((response) => {
-          console.log('signed up')
-          console.log(response.data)
-          alert('Your account has been created. You will be signed in automatically')
-          this.signIn()
-        })
-        .catch((error) => {
-          console.log(error.response)
-          alert(error.response.request.response)
-        })
+      })
     },
-
     signIn() {
-      const credentials = {
+      this.$store.dispatch('signIn', {
         username: this.username,
         password: this.password,
-      }
-
-      this.$axios
-        .post('http://localhost:8000/auth/token/login/', credentials)
-        .then((response) => {
-          console.log('signed in')
-          console.log(response.data)
-
-          sessionStorage.setItem('authToken', response.data.auth_token)
-
-          this.$store.dispatch('fetchUser')
-          this.$router.push('/main')
-        })
-        .catch((error) => {
-          console.log(error.response)
-          alert(error.response.request.response)
-        })
-
+      }).then(() => {
+        console.log('kek')
+        this.$router.push('/main')
+      })
     },
   },
 }

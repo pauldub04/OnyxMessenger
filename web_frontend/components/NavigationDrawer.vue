@@ -33,14 +33,12 @@
     </v-list>
     <v-spacer></v-spacer>
     <v-list dense>
-      <v-list-item link>
+      <v-list-item link @click="$store.dispatch('logOut')">
         <v-list-item-icon>
           <v-icon>mdi-logout</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title @click="$store.dispatch('logOut')">
-            Выйти из системы
-          </v-list-item-title>
+          <v-list-item-title>Выйти из системы</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
