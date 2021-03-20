@@ -1,7 +1,10 @@
 <template>
   <v-app>
     <v-row no-gutters>
-      <NavigationDrawer></NavigationDrawer>
+      <NavigationDrawer
+        :username="$store.state.user.username"
+        :email="$store.state.user.email"
+      ></NavigationDrawer>
       <v-col cols="3" class="grey darken-4">
         <v-list :max-height="height" class="overflow-y-auto dark">
           <v-list-item-group v-model="selectedItem">
@@ -58,10 +61,12 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mdiAccount } from '@mdi/js'
 import NavigationDrawer from '~/components/NavigationDrawer'
 import Chat from '~/components/Chat'
 export default {
+  // middleware: 'auth', // check is user auth
   components: { Chat, NavigationDrawer },
   icons: { account: mdiAccount },
   data: () => ({
@@ -166,7 +171,13 @@ export default {
       },
     ],
   }),
+  beforeCreate() {
+    this.$store.dispatch('middlewareAuth')
+  },
   mounted() {
+    // this.$store.dispatch('fetchUser')
+    // console.log(this.$store.getters.getToken)
+
     this.$nextTick(function () {
       this.onResize()
     })

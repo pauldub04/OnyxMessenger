@@ -5,7 +5,7 @@
         <v-list-item-avatar>
           <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
             <v-avatar class="mr-2" size="33" elevation="10">
-              <v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
+              <!-- <v-img src="https://randomuser.me/api/portraits/women/85.jpg" /> -->
             </v-avatar>
           </v-badge>
         </v-list-item-avatar>
@@ -13,8 +13,8 @@
 
       <v-list-item link>
         <v-list-item-content>
-          <v-list-item-title class="title"> Sandra Adams </v-list-item-title>
-          <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+          <v-list-item-title class="title">{{ username }}</v-list-item-title>
+          <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -39,11 +39,10 @@
     </v-list>
     <v-spacer></v-spacer>
     <v-list dense>
-      <v-list-item link>
+      <v-list-item link @click="$store.dispatch('logOut')">
         <v-list-item-icon>
           <v-icon>mdi-logout</v-icon>
         </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title>Выйти из системы</v-list-item-title>
         </v-list-item-content>
@@ -53,8 +52,13 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'NavigationDrawer',
+  props: {
+    username: String,
+    email: String,
+  },
   data() {
     return {
       items: [
