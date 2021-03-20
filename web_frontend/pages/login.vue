@@ -170,9 +170,6 @@ export default {
       this.$store.dispatch('signIn', {
         username: this.username,
         password: this.password,
-      }).then(() => {
-        console.log('kek')
-        this.$router.push('/main')
       })
     },
   },

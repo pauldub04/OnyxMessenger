@@ -45,6 +45,8 @@ export const actions = {
           ctx.commit('setToken', response.data.auth_token);
           await ctx.dispatch('fetchUser')
 
+          this.$router.push('/main')
+
           console.log('fetched, pushing')
         })
         .catch((error) => {
