@@ -21,7 +21,13 @@
 
     <v-divider></v-divider>
     <v-list dense>
-      <v-list-item v-for="item in items" :key="item.title" class="mb-2" link>
+      <v-list-item
+        v-for="item in items"
+        :key="item.title"
+        class="mb-2"
+        link
+        :to="item.link"
+      >
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>
@@ -52,8 +58,8 @@ export default {
   data() {
     return {
       items: [
-        { label: 'Настройки', icon: 'mdi-cog' },
-        { label: 'Создать чат', icon: 'mdi-message-text' },
+        { label: 'Настройки', icon: 'mdi-cog', link: '/settings' },
+        { label: 'Создать чат', icon: 'mdi-message-text', link: '/' },
       ],
     }
   },

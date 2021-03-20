@@ -89,31 +89,27 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
-    <v-toolbar id="input-form" ref="inputForm" flat>
-      <v-btn icon fab dark small>
+    <v-overlay v-model="overlay" :z-index="zIndex">
+      <VEmojiPicker
+        v-click-outside="onClickOutsideEmojiPicker"
+        class="align-center justify-center"
+        @select="selectEmoji"
+      ></VEmojiPicker>
+    </v-overlay>
+    <v-app-bar id="input-form" ref="inputForm" color="rgba(0,0,0,0)" flat>
+      <v-btn icon @click="attachFile">
         <v-icon>{{ icons.attach }}</v-icon>
       </v-btn>
-      <v-container fluid>
-        <v-textarea
-          flat
-          class="pt-6"
-          no-resize
-          rows="1"
-          placeholder="Type your message..."
-        ></v-textarea>
-      </v-container>
-      <v-toolbar-items>
-        <v-btn icon fab dark small
-          ><v-icon>{{ icons.send }}</v-icon></v-btn
-        >
-        <v-btn icon fab dark small
-          ><v-icon>{{ icons.smile }}</v-icon></v-btn
-        >
-        <v-btn icon fab dark small
-          ><v-icon>{{ icons.micro }}</v-icon></v-btn
-        >
-      </v-toolbar-items>
-    </v-toolbar>
+      <v-text-field v-model="message" class="mt-6"></v-text-field>
+      <v-btn icon @click="overlay = !overlay">
+        <v-icon>{{ icons.smile }}</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon @click="messageOrAudio">
+          {{ message ? icons.send : icons.micro }}
+        </v-icon>
+      </v-btn>
+    </v-app-bar>
   </v-main>
 </template>
 
@@ -126,18 +122,27 @@ import {
   mdiEmoticonHappyOutline,
   mdiMicrophoneOutline,
   mdiSend,
+  mdiCloseCircle,
 } from '@mdi/js'
+import { VEmojiPicker } from 'v-emoji-picker'
 export default {
   name: 'Chat',
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    VEmojiPicker,
+  },
   props: {
     context: {
-      type: Array,
+      type: Object,
       default: null,
     },
   },
   data: () => ({
+    message: '',
     user_id: 1,
     height: 0,
+    overlay: false,
+    zIndex: 0,
     icons: {
       searchIcon: mdiMagnify,
       chatInfo: mdiPageLayoutSidebarRight,
@@ -146,6 +151,7 @@ export default {
       smile: mdiEmoticonHappyOutline,
       micro: mdiMicrophoneOutline,
       send: mdiSend,
+      closeCircle: mdiCloseCircle,
     },
     itemsDropdownMenu: [
       { title: 'Click Me' },
@@ -154,6 +160,7 @@ export default {
       { title: 'Click Me 2' },
     ],
   }),
+  watch: {},
   mounted() {
     this.$nextTick(function () {
       this.matchHeight()
@@ -166,6 +173,33 @@ export default {
       const heightForm = document.getElementById('input-form').offsetHeight
       const windowHeight = window.innerHeight
       this.height = windowHeight - (heightInfobar + heightForm) - 2
+    },
+    attachFile() {
+      alert('File attached')
+    },
+    clearMessage() {
+      this.message = ''
+    },
+    messageOrAudio() {
+      if (this.message) {
+        this.sendMessage()
+      } else {
+        this.makeAudioMessage()
+      }
+    },
+    sendMessage() {
+      alert(this.message)
+      this.clearMessage()
+    },
+    makeAudioMessage() {
+      alert('Audio done!')
+    },
+    selectEmoji(emoji) {
+      this.overlay = false
+      this.message += emoji.data
+    },
+    onClickOutsideEmojiPicker() {
+      this.overlay = false
     },
   },
 }

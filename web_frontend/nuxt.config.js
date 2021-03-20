@@ -14,7 +14,7 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: [],
+  css: ['@/assets/css/style.css', '@/assets/fonts/montserrat.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [],
@@ -54,6 +54,12 @@ export default {
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
         },
+      },
+    },
+    treeShake: true,
+    defaultAssets: {
+      font: {
+        family: 'Montserrat',
       },
     },
     icons: {
