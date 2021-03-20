@@ -15,15 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import messages_api.views as views
 
+import messages_api.views as messages_api_views
+import chat.views as chat_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.test),
-    path('get_messages/', views.get_messages),
-    path('send_message/', views.send_message),
+
+    path('', messages_api_views.test),
+    path('get_messages/', messages_api_views.get_messages),
+    path('send_message/', messages_api_views.send_message),
 
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+
+    path('api/', include('chat.urls'))
 ]
