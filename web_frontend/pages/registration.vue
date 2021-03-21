@@ -56,7 +56,7 @@
               <v-text-field
                 v-model="confirm_password"
                 label="Confirm Password"
-                type="text"
+                :type="show ? 'text' : 'password'"
                 name="input-10-1"
                 counter
               ></v-text-field>
@@ -147,7 +147,9 @@ export default {
       ],
     },
   }),
-
+  beforeCreate() {
+    this.$store.dispatch('middlewareAuthSign')
+  },
   computed: {
     currentTitle() {
       switch (this.step) {

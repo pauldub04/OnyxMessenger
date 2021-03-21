@@ -171,7 +171,7 @@ export default {
     ],
   }),
   beforeCreate() {
-    this.$store.dispatch('middlewareAuth')
+    this.$store.dispatch('middlewareAuthMain')
   },
   mounted() {
     // this.$store.dispatch('fetchUser')

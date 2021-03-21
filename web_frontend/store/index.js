@@ -87,9 +87,14 @@ export const actions = {
     console.log('setted in axios');
   },
 
-  middlewareAuth(ctx) {
+  middlewareAuthMain(ctx) {
     if (ctx.state.token === null || ctx.state.token === '') {
       this.$router.push('/')
+    }
+  },
+  middlewareAuthSign(ctx) {
+    if (ctx.state.token !== null && ctx.state.token !== '') {
+      this.$router.push('/main')
     }
   }
 

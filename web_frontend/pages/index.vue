@@ -100,6 +100,9 @@ export default {
     // snackbar: false,
     // text: `I'm a multi-line snackbar.`,
   }),
+  beforeCreate() {
+    this.$store.dispatch('middlewareAuthSign')
+  },
   methods: {
     setHeight() {
       const height = window.innerHeight
