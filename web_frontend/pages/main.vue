@@ -1,5 +1,9 @@
 <template>
   <v-app>
+    <v-overlay :value="overlay" opacity="1">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </v-overlay>
+
     <v-row no-gutters>
       <NavigationDrawer
         :username="$store.state.user.username"
@@ -169,11 +173,13 @@ export default {
         ],
       },
     ],
+    overlay: true,
   }),
   beforeCreate() {
     this.$store.dispatch('middlewareAuthMain')
   },
   mounted() {
+    this.overlay = false
     // this.$store.dispatch('fetchUser')
     // console.log(this.$store.getters.getToken)
 

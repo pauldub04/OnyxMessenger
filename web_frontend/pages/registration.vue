@@ -87,7 +87,7 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn :disabled="step === 1" text @click="step--"> Back </v-btn>
+          <v-btn text @click="back"> Back </v-btn>
           <v-spacer></v-spacer>
           <v-btn
             v-if="step === 1"
@@ -147,9 +147,6 @@ export default {
       ],
     },
   }),
-  beforeCreate() {
-    this.$store.dispatch('middlewareAuthSign')
-  },
   computed: {
     currentTitle() {
       switch (this.step) {
@@ -167,14 +164,20 @@ export default {
       return /.+@.+\..+/.test(this.email) && !!this.email
     },
   },
+  beforeCreate() {
+    this.$store.dispatch('middlewareAuthSign')
+  },
   methods: {
     signUp() {
-      console.log('SHit')
       this.$store.dispatch('signUp', {
         email: this.email,
         username: this.username,
         password: this.password,
       })
+    },
+    back() {
+      if (this.step === 1) this.$router.push('/')
+      else this.step--
     },
   },
 }
