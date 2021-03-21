@@ -19,6 +19,7 @@
                 v-model="username"
                 label="Username"
                 :rules="rules[rules.required]"
+                required
               ></v-text-field>
               <span class="caption grey--text text--darken-1">
                 This is the username you will use to login to your account
@@ -27,6 +28,19 @@
           </v-window-item>
 
           <v-window-item :value="2">
+            <v-card-text>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="rules[rules.email]"
+              ></v-text-field>
+              <span class="caption grey--text text--darken-1">
+                This is the email you will use to login to your account
+              </span>
+            </v-card-text>
+          </v-window-item>
+
+          <v-window-item :value="3">
             <v-card-text>
               <v-text-field
                 v-model="password"
@@ -52,7 +66,7 @@
             </v-card-text>
           </v-window-item>
 
-          <v-window-item :value="3">
+          <v-window-item :value="4">
             <div class="pa-4 text-center">
               <h3 class="title font-weight-light mb-2">You are so close!</h3>
               <span class="caption grey--text">
@@ -85,6 +99,14 @@
           >
           <v-btn
             v-else-if="step === 2"
+            :disabled="!checkEmail"
+            color="primary"
+            depressed
+            @click="step++"
+            >NEXT</v-btn
+          >
+          <v-btn
+            v-else-if="step === 3"
             :disabled="
               confirm_password === '' ||
               password === '' ||
@@ -96,7 +118,7 @@
           >
             Next
           </v-btn>
-          <v-btn v-else color="primary" depressed @click="registerAccount">
+          <v-btn v-else color="primary" depressed @click="signUp">
             SIGN UP
           </v-btn>
         </v-card-actions>
@@ -114,10 +136,15 @@ export default {
     showAgreement: false,
     username: '',
     password: '',
+    email: '',
     confirm_password: '',
     rules: {
-      required: (value) => !!value || 'Required.',
+      required: (value) => !!value || 'This field is required',
       min: (value) => value.length >= 8 || 'Min 8 characters',
+      email: [
+        (v) => !!v || 'E-mail is required',
+        (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
     },
   }),
 
@@ -127,16 +154,25 @@ export default {
         case 1:
           return 'Set your username'
         case 2:
+          return 'Set your email'
+        case 3:
           return 'Set your password'
         default:
           return 'Almost done'
       }
     },
+    checkEmail() {
+      return /.+@.+\..+/.test(this.email) && !!this.email
+    },
   },
   methods: {
-    registerAccount() {
-      // eslint-disable-next-line no-console
+    signUp() {
       console.log('SHit')
+      this.$store.dispatch('signUp', {
+        email: this.email,
+        username: this.username,
+        password: this.password,
+      })
     },
   },
 }

@@ -26,7 +26,7 @@
                     dense
                     outlined
                     required
-                    :rules="rules.empty"
+                    :rules="rules.required"
                   >
                   </v-text-field>
                 </v-row>
@@ -40,7 +40,7 @@
                     dense
                     outlined
                     required
-                    :rules="rules.empty"
+                    :rules="rules.required"
                     @click:append="showPassword = !showPassword"
                   >
                   </v-text-field>
@@ -94,7 +94,7 @@ export default {
     valid: true,
     showPassword: false,
     rules: {
-      empty: [(val) => (val || '').length > 0 || 'This field is required'],
+      required: [(value) => !!value || 'This field is required'],
     },
 
     // snackbar: false,
