@@ -16,6 +16,7 @@ export const mutations = {
   setToken(state, token) {
     state.token = token;
   }
+
 }
 
 export const actions = {
@@ -44,10 +45,9 @@ export const actions = {
           ctx.dispatch('setAuthHeader', response.data.auth_token);
           ctx.commit('setToken', response.data.auth_token);
           await ctx.dispatch('fetchUser')
-
-          this.$router.push('/main')
-
+          
           console.log('fetched, pushing')
+          this.$router.push('/main')
         })
         .catch((error) => {
           console.log(error.response)
@@ -79,7 +79,7 @@ export const actions = {
     ctx.commit('setUser', {})
     ctx.commit('setToken', null)
 
-    this.$router.push('/login')
+    this.$router.push('/')
   },
 
   setAuthHeader(ctx, token) {
@@ -89,7 +89,7 @@ export const actions = {
 
   middlewareAuth(ctx) {
     if (ctx.state.token === null || ctx.state.token === '') {
-      this.$router.push('/login')
+      this.$router.push('/')
     }
   }
 

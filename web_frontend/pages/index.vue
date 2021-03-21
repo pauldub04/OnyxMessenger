@@ -15,8 +15,9 @@
             <v-row justify="center" align="start">
               <h1>LOG IN</h1>
             </v-row>
-            <v-row justify="center" class="mt-6">
-              <v-form @submit="signIn">
+            <v-row justify="center" class="mt-10">
+              <!-- <v-form @submit="signIn"> -->
+              <v-form @submit.prevent="signIn" v-model="valid">
                 <v-row justify="center">
                   <v-text-field
                     v-model="username"
@@ -24,6 +25,8 @@
                     rounded
                     dense
                     outlined
+                    required
+                    :rules="rules.empty"
                   >
                   </v-text-field>
                 </v-row>
@@ -31,14 +34,19 @@
                   <v-text-field
                     v-model="password"
                     label="Password"
+                    :type="showPassword ? 'text' : 'password'"
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     rounded
                     dense
                     outlined
+                    required
+                    :rules="rules.empty"
+                    @click:append="showPassword = !showPassword"
                   >
                   </v-text-field>
                 </v-row>
                 <v-row justify="center">
-                  <v-btn type="submit"> Submit </v-btn>
+                  <v-btn type="submit" :disabled="!valid"> Submit </v-btn>
                 </v-row>
               </v-form>
             </v-row>
@@ -57,6 +65,23 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <!-- <v-row class="mr-0">
+      <v-col cols="3" align-self="end" offset-md="9">
+        <v-alert dismissible type="error" elevation="6" text disable>
+          kek
+        </v-alert>
+      </v-col>
+    </v-row> -->
+    <!-- <v-snackbar v-model="snackbar">
+      {{ error }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar> -->
   </v-app>
 </template>
 
@@ -65,6 +90,15 @@ export default {
   data: () => ({
     username: '',
     password: '',
+
+    valid: true,
+    showPassword: false,
+    rules: {
+      empty: [(val) => (val || '').length > 0 || 'This field is required'],
+    },
+
+    // snackbar: false,
+    // text: `I'm a multi-line snackbar.`,
   }),
   methods: {
     setHeight() {
@@ -72,8 +106,10 @@ export default {
       return 'height: ' + height
     },
     signIn() {
-      // eslint-disable-next-line no-console
-      console.log('Shit')
+      this.$store.dispatch('signIn', {
+        username: this.username,
+        password: this.password,
+      })
     },
   },
 }
