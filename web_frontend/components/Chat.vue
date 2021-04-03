@@ -36,7 +36,7 @@
     <v-list :height="height" class="overflow-y-auto dark">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
         <v-app-bar
-          v-if="message.id_sender === user_id"
+          v-if="message.user.id === $store.state.user.id"
           color="rgba(0,0,0,0)"
           flat
           class="mt-15"
@@ -46,7 +46,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
-                  {{ message.text }}
+                  {{ message.message }}
                 </div>
                 <v-list-item-subtitle>
                   {{ message.date }}
@@ -77,7 +77,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
-                  {{ message.text }}
+                  {{ message.message }}
                 </div>
                 <v-list-item-subtitle>
                   {{ message.date }}
@@ -100,10 +100,11 @@
           no-resize
           rows="1"
           placeholder="Type your message..."
+          v-model="message"
         ></v-textarea>
       </v-container>
       <v-toolbar-items>
-        <v-btn icon fab dark small
+        <v-btn icon fab dark small @click="send"
           ><v-icon>{{ icons.send }}</v-icon></v-btn
         >
         <v-btn icon fab dark small
@@ -118,6 +119,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
   mdiMagnify,
   mdiPageLayoutSidebarRight,
@@ -131,7 +133,7 @@ export default {
   name: 'Chat',
   props: {
     context: {
-      type: Array,
+      type: Object,
       default: null,
     },
   },
@@ -153,19 +155,69 @@ export default {
       { title: 'Click Me' },
       { title: 'Click Me 2' },
     ],
+    message: '',
   }),
   mounted() {
+    this.getMessages()
+
     this.$nextTick(function () {
       this.matchHeight()
     })
     window.addEventListener('resize', this.matchHeight)
   },
+  /*
+  , {
+      username: this.$store.getters.getUser.username,
+    }
+  */
   methods: {
+    getMessages() {
+      console.log('get m')
+      console.log(this.context.uri)
+      this.$axios
+        .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
+        .then((response) => {
+          console.log(response.data)
+          
+          if (response.data.messages.length == 0)
+            this.context.messages = [
+              {
+                user: {
+                  id: -1,
+                },
+                message: 'Nothing here',
+                date: '',
+                read: true,
+              },
+            ]
+          else
+            this.context.messages = response.data.messages
+
+          console.log(this.context.messages)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     matchHeight() {
       const heightInfobar = document.getElementById('info-bar').offsetHeight
       const heightForm = document.getElementById('input-form').offsetHeight
       const windowHeight = window.innerHeight
       this.height = windowHeight - (heightInfobar + heightForm) - 2
+    },
+    send() {
+      this.$axios
+        .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
+          message: this.message,
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.getMessages()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+        this.message = ''
     },
   },
 }

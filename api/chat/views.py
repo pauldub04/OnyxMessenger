@@ -26,6 +26,28 @@ class ChatSessionView(APIView):
             'message': 'New chat session created'
         })
 
+    def get(self, request, *args, **kwargs):
+        """get all chat sessions of user."""
+
+        user = request.user
+        chat_sessions = list(ChatSession.objects.filter(owner=user))
+
+        sessions = []
+        for c in chat_sessions:
+            sessions.append({
+                'uri': c.uri,
+                'username': '',
+                'userImage': '',
+                'lastMessage': '',
+                'unreadMessages': 0,
+                'messages': [],
+            })
+
+        return Response({
+            'status': 'SUCCESS',
+            'sessions': sessions,
+        })
+
     def patch(self, request, *args, **kwargs):
         """Add a user to a chat session."""
         User = get_user_model()
