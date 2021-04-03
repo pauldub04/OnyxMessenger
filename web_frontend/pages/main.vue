@@ -52,7 +52,10 @@
             </div>
           </v-list-item-group>
         </v-list>
-        <v-btn class="ml-5 mt-5" @click="createChat">Create new chat</v-btn>
+        <v-col v-if="contacts.length == 0">
+          <div>У вас нет чатов, cоздайте первый</div>
+          <v-btn @click="createChat" class="mt-2">Создать чат</v-btn>
+        </v-col>
       </v-col>
       <v-divider vertical></v-divider>
       <v-col>
@@ -222,8 +225,10 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      this.selectedItem += 1
     },
     getChats() {
+      console.log('kek2')
       this.$axios
         .get('http://localhost:8000/api/chats/')
         .then((response) => {

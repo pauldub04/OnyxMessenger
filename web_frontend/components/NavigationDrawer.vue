@@ -21,7 +21,12 @@
 
     <v-divider></v-divider>
     <v-list dense>
-      <v-list-item v-for="item in items" :key="item.title" class="mb-2" link>
+      <!-- <v-list-item
+        v-for="item in items"
+        :key="item.title"
+        class="mb-2"
+        link
+      >
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>
@@ -29,8 +34,27 @@
         <v-list-item-content>
           <v-list-item-title>{{ item.label }}</v-list-item-title>
         </v-list-item-content>
+      </v-list-item> -->
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon> mdi-cog </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title> Настройки </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link @click="$emit('createChat')">
+        <v-list-item-icon>
+          <v-icon> mdi-message-text </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title> Создать чат </v-list-item-title>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
+
     <v-spacer></v-spacer>
     <v-list dense>
       <v-list-item link @click="$store.dispatch('logOut')">

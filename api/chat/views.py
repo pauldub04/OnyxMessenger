@@ -34,13 +34,18 @@ class ChatSessionView(APIView):
 
         sessions = []
         for c in chat_sessions:
+            messages = [chat_session_message.to_json() for chat_session_message in c.messages.all()]
+            if len(messages) == 0:
+                messages = [{'user': {'id': -1, 'username': '', 'email': '', 'first_name': '', 'last_name': ''},
+                             'message': 'No messages yet'}]
+
             sessions.append({
                 'uri': c.uri,
                 'username': '',
                 'userImage': '',
-                'lastMessage': '',
+                'lastMessage': messages[-1]['message'],
                 'unreadMessages': 0,
-                'messages': [],
+                'messages': messages
             })
 
         return Response({

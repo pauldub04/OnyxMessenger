@@ -101,6 +101,7 @@
           rows="1"
           placeholder="Type your message..."
           v-model="message"
+          v-on:keyup.enter="send"
         ></v-textarea>
       </v-container>
       <v-toolbar-items>
@@ -172,27 +173,13 @@ export default {
   */
   methods: {
     getMessages() {
-      console.log('get m')
-      console.log(this.context.uri)
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
         .then((response) => {
           console.log(response.data)
           
-          if (response.data.messages.length == 0)
-            this.context.messages = [
-              {
-                user: {
-                  id: -1,
-                },
-                message: 'Nothing here',
-                date: '',
-                read: true,
-              },
-            ]
-          else
-            this.context.messages = response.data.messages
-
+          this.context.messages = response.data.messages
+          this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
           console.log(this.context.messages)
         })
         .catch((error) => {
