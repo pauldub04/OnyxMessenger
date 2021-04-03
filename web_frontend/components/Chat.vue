@@ -179,7 +179,8 @@ export default {
           console.log(response.data)
           
           this.context.messages = response.data.messages
-          this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
+          if (response.data.messages.length != 0)
+            this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
           console.log(this.context.messages)
         })
         .catch((error) => {

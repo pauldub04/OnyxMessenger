@@ -44,7 +44,7 @@
           <v-list-item-title> Настройки </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link @click="$emit('createChat')">
+      <v-list-item link @click="click">
         <v-list-item-icon>
           <v-icon> mdi-message-text </v-icon>
         </v-list-item-icon>
@@ -85,6 +85,12 @@ export default {
       ],
     }
   },
+  methods: {
+    click() {
+      console.log('df')
+      this.$nuxt.$emit('createChat')
+    }
+  }
 }
 </script>
 

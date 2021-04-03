@@ -54,6 +54,8 @@
         </v-list>
         <v-col v-if="contacts.length == 0">
           <div>У вас нет чатов, cоздайте первый</div>
+        </v-col>
+        <v-col>
           <v-btn @click="createChat" class="mt-2">Создать чат</v-btn>
         </v-col>
       </v-col>
@@ -216,16 +218,17 @@ export default {
       return counter
     },
     createChat() {
+      console.log('sg')
       this.$axios
         .post('http://localhost:8000/api/chats/')
         .then((response) => {
           console.log(response.data)
           this.getChats()
+          // this.selectedItem = this.contacts.length - 1
         })
         .catch((error) => {
           console.log(error)
         })
-      this.selectedItem += 1
     },
     getChats() {
       console.log('kek2')
