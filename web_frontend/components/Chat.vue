@@ -6,9 +6,23 @@
           <v-img :src="context.userImage" />
         </v-avatar>
       </v-badge>
-      <v-toolbar-title class="ma-2"> {{ context.username }} </v-toolbar-title>
+      <v-toolbar-title class="ma-2"> {{ context.title }} </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
+        <v-text-field
+          v-if="inviteCount % 2 == 1"
+          class="mt-4 mr-5"
+          label="Добавить пользователя"
+          placeholder="Введите username"
+          v-model="inviteUserName"
+          append-outer-icon="mdi-plus"
+          @click:append-outer="invite"
+          clearable
+        >
+        </v-text-field>
+        <v-btn icon fab dark small @click="inviteCount++"
+          ><v-icon>{{ icons.accountPlus }}</v-icon>
+        </v-btn>
         <v-btn icon fab dark small
           ><v-icon>{{ icons.searchIcon }}</v-icon></v-btn
         >
@@ -36,7 +50,7 @@
     <v-list :height="height" class="overflow-y-auto dark">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
         <v-app-bar
-          v-if="message.id_sender === user_id"
+          v-if="message.user.id === $store.state.user.id"
           color="rgba(0,0,0,0)"
           flat
           class="mt-15"
@@ -46,7 +60,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
-                  {{ message.text }}
+                  {{ message.message }}
                 </div>
                 <v-list-item-subtitle>
                   {{ message.date }}
@@ -77,7 +91,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
-                  {{ message.text }}
+                  {{ message.message }}
                 </div>
                 <v-list-item-subtitle>
                   {{ message.date }}
@@ -100,7 +114,12 @@
       <v-btn icon @click="attachFile">
         <v-icon>{{ icons.attach }}</v-icon>
       </v-btn>
-      <v-text-field v-model="message" class="mt-6"></v-text-field>
+      <v-text-field
+        v-model="message"
+        class="mt-6"
+        v-on:keyup.enter="sendMessage"
+      >
+      </v-text-field>
       <v-btn icon @click="overlay = !overlay">
         <v-icon>{{ icons.smile }}</v-icon>
       </v-btn>
@@ -114,6 +133,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
   mdiMagnify,
   mdiPageLayoutSidebarRight,
@@ -123,6 +143,8 @@ import {
   mdiMicrophoneOutline,
   mdiSend,
   mdiCloseCircle,
+  mdiPlus,
+  mdiAccountPlus,
 } from '@mdi/js'
 import { VEmojiPicker } from 'v-emoji-picker'
 export default {
@@ -152,6 +174,8 @@ export default {
       micro: mdiMicrophoneOutline,
       send: mdiSend,
       closeCircle: mdiCloseCircle,
+      plus: mdiPlus,
+      accountPlus: mdiAccountPlus,
     },
     itemsDropdownMenu: [
       { title: 'Click Me' },
@@ -159,15 +183,57 @@ export default {
       { title: 'Click Me' },
       { title: 'Click Me 2' },
     ],
+    message: '',
+    inviteCount: 0,
+    inviteUserName: null,
   }),
   watch: {},
+  created () {
+    setInterval(this.getMessages, 3000)
+  },
   mounted() {
+    this.getMessages()
+
     this.$nextTick(function () {
       this.matchHeight()
     })
     window.addEventListener('resize', this.matchHeight)
   },
   methods: {
+    invite() {
+      if (this.inviteUserName !== null) {
+        console.log(this.inviteUserName)
+
+        this.$axios
+          .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
+            username: this.inviteUserName
+          })
+          .then((response) => {
+            console.log(response.data)
+            alert(response.data.message)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
+        this.inviteCount++
+      }
+    },
+    getMessages() {
+      this.$axios
+        .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
+        .then((response) => {
+          console.log(response.data)
+          
+          this.context.messages = response.data.messages
+          if (response.data.messages.length != 0)
+            this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
+          console.log(this.context.messages)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     matchHeight() {
       const heightInfobar = document.getElementById('info-bar').offsetHeight
       const heightForm = document.getElementById('input-form').offsetHeight
@@ -188,7 +254,19 @@ export default {
       }
     },
     sendMessage() {
-      alert(this.message)
+      if (this.message == null || this.message == '')
+        return
+      this.$axios
+        .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
+          message: this.message,
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.getMessages()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
       this.clearMessage()
     },
     makeAudioMessage() {

@@ -7,6 +7,10 @@ export const state = () => ({
   },
   token: null,
   status: '',
+
+  chat: {
+    selected_chat: -1,
+  }
 })
 
 export const mutations = {
