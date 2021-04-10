@@ -9,6 +9,20 @@
       <v-toolbar-title class="ma-2"> {{ context.username }} </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
+        <v-text-field
+          v-if="inviteCount % 2 == 1"
+          class="mt-4 mr-5"
+          label="Добавить пользователя"
+          placeholder="Введите username"
+          v-model="inviteUserName"
+          append-outer-icon="mdi-plus"
+          @click:append-outer="invite"
+          clearable
+        >
+        </v-text-field>
+        <v-btn icon fab dark small @click="inviteCount++"
+          ><v-icon>{{ icons.accountPlus }}</v-icon>
+        </v-btn>
         <v-btn icon fab dark small
           ><v-icon>{{ icons.searchIcon }}</v-icon></v-btn
         >
@@ -129,6 +143,8 @@ import {
   mdiEmoticonHappyOutline,
   mdiMicrophoneOutline,
   mdiSend,
+  mdiPlus,
+  mdiAccountPlus,
 } from '@mdi/js'
 export default {
   name: 'Chat',
@@ -149,6 +165,8 @@ export default {
       smile: mdiEmoticonHappyOutline,
       micro: mdiMicrophoneOutline,
       send: mdiSend,
+      plus: mdiPlus,
+      accountPlus: mdiAccountPlus,
     },
     itemsDropdownMenu: [
       { title: 'Click Me' },
@@ -157,7 +175,12 @@ export default {
       { title: 'Click Me 2' },
     ],
     message: '',
+    inviteCount: 0,
+    inviteUserName: null,
   }),
+  created () {
+    setInterval(this.getMessages, 3000)
+  },
   mounted() {
     this.getMessages()
 
@@ -166,12 +189,26 @@ export default {
     })
     window.addEventListener('resize', this.matchHeight)
   },
-  /*
-  , {
-      username: this.$store.getters.getUser.username,
-    }
-  */
   methods: {
+    invite() {
+      if (this.inviteUserName !== null) {
+        console.log(this.inviteUserName)
+
+        this.$axios
+          .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
+            username: this.inviteUserName
+          })
+          .then((response) => {
+            console.log(response.data)
+            alert(response.data.message)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
+        this.inviteCount++
+      }
+    },
     getMessages() {
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)

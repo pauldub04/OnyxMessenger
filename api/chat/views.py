@@ -30,7 +30,13 @@ class ChatSessionView(APIView):
         """get all chat sessions of user."""
 
         user = request.user
-        chat_sessions = list(ChatSession.objects.filter(owner=user))
+
+        chat_sessions = []
+        chat_sessions_all = list(ChatSession.objects.all())
+
+        for c in chat_sessions_all:
+            if user in [c.user for c in c.members.all()] or c.owner == user:
+                chat_sessions.append(c)
 
         sessions = []
         for c in chat_sessions:
@@ -59,29 +65,46 @@ class ChatSessionView(APIView):
 
         uri = kwargs['uri']
         username = request.data['username']
-        user = User.objects.get(username=username)
+
+        try:
+            user = User.objects.get(username=username)
+        except:
+            return Response({
+                'status': 'ERROR',
+                'message': 'No such username',
+            })
 
         chat_session = ChatSession.objects.get(uri=uri)
-        owner = chat_session.owner
+        if user in [chat_session.user for chat_session in chat_session.members.all()]:
+            return Response({
+                'status': 'ERROR',
+                'message': 'User is already in chat',
+            })
 
-        if owner != user:  # Only allow non owners join the room
+        owner = chat_session.owner
+        inviter_user = request.user
+
+        # Only allow non owners join the room
+        if owner != user and inviter_user == owner:
             chat_session.members.get_or_create(
-                user = user, chat_session = chat_session
+                user=user,
+                chat_session=chat_session,
             )
 
-        owner = deserialize_user(owner)
-        members = [
-        deserialize_user(chat_session.user)
-        for chat_session in chat_session.members.all()
+            owner = deserialize_user(owner)
+            members = [deserialize_user(chat_session.user) for chat_session in chat_session.members.all()]
 
-        ]
-
-        members.insert(0, owner)  # Make the owner the first member
-        return Response({
-            'status': 'SUCCESS', 'members': members,
-            'message': '%s joined that chat' % user.username,
-            'user': deserialize_user(user)
-        })
+            members.insert(0, owner)  # Make the owner the first member
+            return Response({
+                'status': 'SUCCESS', 'members': members,
+                'message': '%s joined that chat' % user.username,
+                'user': deserialize_user(user)
+            })
+        else:
+            return Response({
+                'status': 'ERROR',
+                'message': 'Only owner now can invite',
+            })
 
 
 class ChatSessionMessageView(APIView):
