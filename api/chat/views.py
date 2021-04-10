@@ -39,11 +39,23 @@ class ChatSessionView(APIView):
                 chat_sessions.append(c)
 
         sessions = []
+        i = 1
         for c in chat_sessions:
             messages = [chat_session_message.to_json() for chat_session_message in c.messages.all()]
             if len(messages) == 0:
                 messages = [{'user': {'id': -1, 'username': '', 'email': '', 'first_name': '', 'last_name': ''},
                              'message': 'No messages yet'}]
+
+            title = f'Chat {i}'
+            i += 1
+            # owner = c.owner
+            # members = c.members.all()
+            # if len([c.user for c in c.members.all()]) == 2:
+            #     for u in [c.user for c in members]:
+            #         print(u.username)
+            #         if u != owner:
+            #             title = u.username
+            #             break
 
             sessions.append({
                 'uri': c.uri,
@@ -51,7 +63,8 @@ class ChatSessionView(APIView):
                 'userImage': '',
                 'lastMessage': messages[-1]['message'],
                 'unreadMessages': 0,
-                'messages': messages
+                'messages': messages,
+                'title': title,
             })
 
         return Response({

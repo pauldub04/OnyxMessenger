@@ -25,7 +25,7 @@
                   </v-badge>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title>{{ contact.username }}</v-list-item-title>
+                  <v-list-item-title>{{ contact.title }}</v-list-item-title>
                   <v-list-item-subtitle>
                     {{ contact.lastMessage }}
                   </v-list-item-subtitle>

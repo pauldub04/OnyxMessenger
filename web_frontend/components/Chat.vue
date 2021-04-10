@@ -6,7 +6,7 @@
           <v-img :src="context.userImage" />
         </v-avatar>
       </v-badge>
-      <v-toolbar-title class="ma-2"> {{ context.username }} </v-toolbar-title>
+      <v-toolbar-title class="ma-2"> {{ context.title }} </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-text-field
@@ -231,6 +231,8 @@ export default {
       this.height = windowHeight - (heightInfobar + heightForm) - 2
     },
     send() {
+      if (this.message == null || this.message == '')
+        return
       this.$axios
         .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
           message: this.message,
