@@ -11,13 +11,13 @@
       <v-toolbar-items>
         <v-text-field
           v-if="inviteCount % 2 == 1"
+          v-model="inviteUserName"
           class="mt-4 mr-5"
           label="Добавить пользователя"
           placeholder="Введите username"
-          v-model="inviteUserName"
           append-outer-icon="mdi-plus"
-          @click:append-outer="invite"
           clearable
+          @click:append-outer="invite"
         >
         </v-text-field>
         <v-btn icon fab dark small @click="inviteCount++"
@@ -47,13 +47,13 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-divider></v-divider>
-    <v-list :height="height" class="overflow-y-auto dark">
+    <v-list id="messageContainer" :height="height" class="overflow-y-auto dark">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
         <v-app-bar
           v-if="message.user.id === $store.state.user.id"
           color="rgba(0,0,0,0)"
           flat
-          class="mt-15"
+          :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
         >
           <v-spacer></v-spacer>
           <v-card class="mt-10 mr-2" max-width="350px" color="blue" dark>
@@ -81,7 +81,12 @@
             </v-avatar>
           </v-badge>
         </v-app-bar>
-        <v-app-bar v-else color="rgba(0,0,0,0)" flat class="mt-15">
+        <v-app-bar
+          v-else
+          color="rgba(0,0,0,0)"
+          flat
+          :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
+        >
           <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
             <v-avatar class="mt-n5 mr-2" size="30" elevation="10">
               <v-img :src="context.userImage" />
@@ -101,6 +106,18 @@
           </v-card>
         </v-app-bar>
       </v-list-item>
+      <v-btn
+        style="background-color: grey"
+        large
+        icon
+        bottom
+        right
+        absolute
+        class="mr-2 mb-16"
+        @click="scrollToBottom"
+      >
+        <v-icon>{{ icons.down }}</v-icon>
+      </v-btn>
     </v-list>
     <v-divider></v-divider>
     <v-overlay v-model="overlay" :z-index="zIndex">
@@ -111,14 +128,24 @@
       ></VEmojiPicker>
     </v-overlay>
     <v-app-bar id="input-form" ref="inputForm" color="rgba(0,0,0,0)" flat>
-      <v-btn icon @click="attachFile">
-        <v-icon>{{ icons.attach }}</v-icon>
-      </v-btn>
-      <v-text-field
-        v-model="message"
-        class="mt-6"
-        v-on:keyup.enter="sendMessage"
+      <upload-btn
+        noTitleUpdate
+        class="pa-0"
+        multiple
+        hover
+        icon
+        flat
+        round
+        small
+        depressed
+        maxWidth="15"
+        @file-update="updateFile"
       >
+        <template slot="icon">
+          <v-icon>{{ icons.attach }}</v-icon>
+        </template>
+      </upload-btn>
+      <v-text-field v-model="message" class="mt-6" @keyup.enter="sendMessage">
       </v-text-field>
       <v-btn icon @click="overlay = !overlay">
         <v-icon>{{ icons.smile }}</v-icon>
@@ -145,13 +172,16 @@ import {
   mdiCloseCircle,
   mdiPlus,
   mdiAccountPlus,
+  mdiChevronDown,
 } from '@mdi/js'
 import { VEmojiPicker } from 'v-emoji-picker'
+import UploadButton from 'vuetify-upload-button'
 export default {
   name: 'Chat',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     VEmojiPicker,
+    'upload-btn': UploadButton
   },
   props: {
     context: {
@@ -176,7 +206,9 @@ export default {
       closeCircle: mdiCloseCircle,
       plus: mdiPlus,
       accountPlus: mdiAccountPlus,
+      down: mdiChevronDown,
     },
+    files: [],
     itemsDropdownMenu: [
       { title: 'Click Me' },
       { title: 'Click Me' },
@@ -194,12 +226,18 @@ export default {
   mounted() {
     this.getMessages()
 
+    this.scrollToBottom();
+
     this.$nextTick(function () {
       this.matchHeight()
     })
     window.addEventListener('resize', this.matchHeight)
   },
   methods: {
+    scrollToBottom() {
+      const container = this.$el.querySelector("#messageContainer");
+      container.scrollTop = container.scrollHeight;
+    },
     invite() {
       if (this.inviteUserName !== null) {
         console.log(this.inviteUserName)
@@ -219,12 +257,16 @@ export default {
         this.inviteCount++
       }
     },
+    updateFile(file) {
+      this.files.push(file)
+      console.log("File in files!")
+    },
     getMessages() {
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
         .then((response) => {
           console.log(response.data)
-          
+
           this.context.messages = response.data.messages
           if (response.data.messages.length != 0)
             this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
@@ -268,6 +310,7 @@ export default {
           console.log(error)
         })
       this.clearMessage()
+      this.scrollToBottom();
     },
     makeAudioMessage() {
       alert('Audio done!')
@@ -283,4 +326,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+ .v-btn--example {
+    bottom: 10;
+    position: absolute;
+    margin: 0 0 80px 150px;
+  }
+</style>

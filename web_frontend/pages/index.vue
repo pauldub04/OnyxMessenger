@@ -17,7 +17,7 @@
             </v-row>
             <v-row justify="center" class="mt-10">
               <!-- <v-form @submit="signIn"> -->
-              <v-form @submit.prevent="signIn" v-model="valid">
+              <v-form v-model="valid" @submit.prevent="signIn">
                 <v-row justify="center">
                   <v-text-field
                     v-model="username"

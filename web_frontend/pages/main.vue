@@ -60,7 +60,7 @@
           <div>У вас нет чатов, cоздайте первый</div>
         </v-col>
         <v-col>
-          <v-btn @click="createChat" class="mt-2">Создать чат</v-btn>
+          <v-btn class="mt-2" @click="createChat">Создать чат</v-btn>
         </v-col>
       </v-col>
       <v-divider vertical></v-divider>
