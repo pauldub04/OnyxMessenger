@@ -9,7 +9,7 @@
       <v-toolbar-title class="ma-2"> {{ context.title }} </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-text-field
+        <!-- <v-text-field
           v-if="inviteCount % 2 == 1"
           v-model="inviteUserName"
           class="mt-4 mr-5"
@@ -19,8 +19,22 @@
           clearable
           @click:append-outer="invite"
         >
-        </v-text-field>
-        <v-btn icon fab dark small @click="inviteCount++"
+        </v-text-field> -->
+        <v-autocomplete
+          chips
+          deletable-chips
+          multiple
+          :items="users"
+          v-if="inviteCount % 2 == 1"
+          v-model="inviteUserName"
+          class="mt-4 mr-5"
+          placeholder="Введите username"
+          clearable
+          append-outer-icon="mdi-send"
+          @click:append-outer="invite"
+          label="Добавить пользователя"
+        ></v-autocomplete>
+        <v-btn icon fab dark small @click="toInvite"
           ><v-icon>{{ icons.accountPlus }}</v-icon>
         </v-btn>
         <v-btn icon fab dark small
@@ -218,12 +232,14 @@ export default {
     message: '',
     inviteCount: 0,
     inviteUserName: null,
+    users: [],
   }),
   watch: {},
   created () {
     setInterval(this.getMessages, 3000)
   },
   mounted() {
+    this.getUsers()
     this.getMessages()
 
     this.scrollToBottom();
@@ -238,39 +254,54 @@ export default {
       const container = this.$el.querySelector("#messageContainer");
       container.scrollTop = container.scrollHeight;
     },
+    toInvite() {
+      this.inviteCount++;
+    },
     invite() {
       if (this.inviteUserName !== null) {
         console.log(this.inviteUserName)
 
+      for (let username of this.inviteUserName)
         this.$axios
           .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
-            username: this.inviteUserName
+            username: username
           })
           .then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             alert(response.data.message)
           })
           .catch((error) => {
             console.log(error)
           })
 
-        this.inviteCount++
+      this.inviteCount++
+      this.inviteUserName = null
       }
     },
     updateFile(file) {
       this.files.push(file)
       console.log("File in files!")
     },
+    getUsers() {
+      this.$axios
+        .get(`http://127.0.0.1:8000/api/users/all/`)
+        .then((response) => {
+          this.users = response.data.users
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     getMessages() {
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
 
           this.context.messages = response.data.messages
           if (response.data.messages.length != 0)
             this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
-          console.log(this.context.messages)
+          // console.log(this.context.messages)
         })
         .catch((error) => {
           console.log(error)

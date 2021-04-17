@@ -2,7 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from .models import (
-    ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user
+    ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user, User
 )
 
 from rest_framework.views import APIView
@@ -91,7 +91,7 @@ class ChatSessionView(APIView):
         if user in [chat_session.user for chat_session in chat_session.members.all()]:
             return Response({
                 'status': 'ERROR',
-                'message': 'User is already in chat',
+                'message': user.username + ' is already in chat',
             })
 
         owner = chat_session.owner
@@ -118,6 +118,28 @@ class ChatSessionView(APIView):
                 'status': 'ERROR',
                 'message': 'Only owner now can invite',
             })
+
+
+class UsersView(APIView):
+    """Manage Users."""
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        """get all users."""
+
+        users_list = list(User.objects.all())
+
+        users = []
+        for u in users_list:
+            users.append(u.username)
+
+        print(users)
+
+        return Response({
+            'status': 'SUCCESS',
+            'users': users,
+        })
 
 
 class ChatSessionMessageView(APIView):
