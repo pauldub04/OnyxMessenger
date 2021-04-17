@@ -80,15 +80,24 @@ export const actions = {
       })
   },
   logOut(ctx) {
-    ctx.commit('setUser', {})
-    ctx.commit('setToken', null)
+    this.$axios
+      .post('http://localhost:8000/auth/token/logout/')
+      .then((response) => {
+        console.log('logout')
+        console.log(response.data)
 
-    this.$router.push('/')
+        ctx.commit('setUser', {})
+        ctx.commit('setToken', null)
+        this.$router.push('/')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
   },
 
   setAuthHeader(ctx, token) {
     this.$axios.setToken(token, 'Token ');
-    console.log('setted in axios');
   },
 
   middlewareAuthMain(ctx) {

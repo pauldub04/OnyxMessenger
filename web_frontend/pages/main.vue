@@ -193,7 +193,7 @@ export default {
     overlay: true,
   }),
   beforeCreate() {
-    this.$store.dispatch('middlewareAuth')
+    this.$store.dispatch('middlewareAuthMain')
     this.$store.dispatch('setAuthHeader', this.$store.getters.getToken)
   },
   mounted() {

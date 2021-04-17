@@ -175,13 +175,13 @@ import {
   mdiChevronDown,
 } from '@mdi/js'
 import { VEmojiPicker } from 'v-emoji-picker'
-import UploadButton from 'vuetify-upload-button'
+// import UploadButton from 'vuetify-upload-button'
 export default {
   name: 'Chat',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     VEmojiPicker,
-    'upload-btn': UploadButton
+    // 'upload-btn': UploadButton
   },
   props: {
     context: {
