@@ -5,6 +5,10 @@ from .models import (
     ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user, User
 )
 
+from .consumers import ChatConsumer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -171,6 +175,11 @@ class ChatSessionMessageView(APIView):
         ChatSessionMessage.objects.create(
             user=user, chat_session=chat_session, message=message
         )
+
+        x = ChatConsumer()
+        x.receive(message)
+        # print('test', channel_layer)
+
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
