@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'messages_api',
     'chat',
+    'channels',
 
     # Custom Apps
     'rest_framework',
@@ -46,6 +47,16 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
 ]
+
+ASGI_APPLICATION = 'api.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
