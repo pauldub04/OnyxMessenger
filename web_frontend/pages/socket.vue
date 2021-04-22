@@ -8,28 +8,53 @@
 <script>
 export default {
   data: () => ({
-    chatSocket: null,
+    websocket: null,
     message: null,
   }),
+  created() {
+    // adsf
+  },
   mounted() {
-    this.chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/lobby/')
+    this.connectToWebSocket()
+    // this.websocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/lobby/')
 
-    this.chatSocket.onmessage = function (e) {
-      const data = JSON.parse(e.data)
-      console.log(data.message)
-    }
+    // this.websocket.onmessage = function (e) {
+    //   const data = JSON.parse(e.data)
+    //   console.log(data.message)
+    // }
 
-    this.chatSocket.onclose = function (e) {
-      console.error('Chat socket closed unexpectedly')
-    }
+    // this.websocket.onclose = function (e) {
+    //   console.error('Chat socket closed unexpectedly')
+    // }
   },
   methods: {
     send() {
-      this.chatSocket.send(
+      this.websocket.send(
         JSON.stringify({
           message: this.message,
         })
       )
+    },
+    connectToWebSocket() {
+      this.websocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/kek/')
+      this.websocket.onopen = this.onOpen
+      this.websocket.onclose = this.onClose
+      this.websocket.onmessage = this.onMessage
+      this.websocket.onerror = this.onError
+    },
+    onOpen(event) {
+      console.log('Connection opened.', event.data)
+    },
+    onClose(event) {
+      console.log('Connection closed.', event.data)
+    },
+    onMessage(event) {
+      const message = JSON.parse(event.data)
+      // this.messages.push(message)
+      console.log(message)
+    },
+    onError(event) {
+      alert('An error occured:', event.data)
     },
   },
 }
