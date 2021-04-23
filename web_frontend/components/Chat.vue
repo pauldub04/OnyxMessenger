@@ -229,18 +229,18 @@ export default {
       { title: 'Click Me' },
       { title: 'Click Me 2' },
     ],
-    message: '',
     inviteCount: 0,
     inviteUserName: null,
     users: [],
   }),
   watch: {},
   created () {
-    setInterval(this.getMessages, 3000)
+    // setInterval(this.getMessages, 3000)
   },
   mounted() {
     this.getUsers()
     this.getMessages()
+    this.connectToWebSocket()
 
     this.scrollToBottom();
 
@@ -250,6 +250,33 @@ export default {
     window.addEventListener('resize', this.matchHeight)
   },
   methods: {
+    connectToWebSocket() {
+      this.websocket = new WebSocket(
+        `ws://127.0.0.1:8000/ws/chat/${this.context.uri}/`,
+        this.$store.getters.getToken
+      )
+      this.websocket.onopen = this.onOpen
+      this.websocket.onclose = this.onClose
+      this.websocket.onmessage = this.onMessage
+      this.websocket.onerror = this.onError
+    },
+    onOpen(event) {
+      console.log('Connection opened.', event.data)
+    },
+    onClose(event) {
+      console.log('Connection closed.', event.data)
+    },
+    onMessage(event) {
+      const message = JSON.parse(event.data)
+      this.context.messages.push(message.message)
+      console.log(message.message)
+    },
+    onError(event) {
+      alert('An error occured:', event.data)
+    },
+
+
+    // ----------------------------------------------------
     scrollToBottom() {
       const container = this.$el.querySelector("#messageContainer");
       container.scrollTop = container.scrollHeight;
@@ -329,17 +356,24 @@ export default {
     sendMessage() {
       if (this.message == null || this.message == '')
         return
-      this.$axios
-        .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
+      this.websocket.send(
+        JSON.stringify({
           message: this.message,
+          user: this.$store.getters.getUser,
+          uri: this.context.uri,
         })
-        .then((response) => {
-          console.log(response.data)
-          this.getMessages()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      )
+      // this.$axios
+      //   .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
+      //     message: this.message,
+      //   })
+      //   .then((response) => {
+      //     console.log(response.data)
+      //     this.getMessages()
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //   })
       this.clearMessage()
       this.scrollToBottom();
     },

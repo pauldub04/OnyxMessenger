@@ -138,8 +138,6 @@ class UsersView(APIView):
         for u in users_list:
             users.append(u.username)
 
-        print(users)
-
         return Response({
             'status': 'SUCCESS',
             'users': users,
@@ -175,9 +173,6 @@ class ChatSessionMessageView(APIView):
         ChatSessionMessage.objects.create(
             user=user, chat_session=chat_session, message=message
         )
-
-        
-
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
