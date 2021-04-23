@@ -176,9 +176,7 @@ class ChatSessionMessageView(APIView):
             user=user, chat_session=chat_session, message=message
         )
 
-        x = ChatConsumer()
-        x.receive(message)
-        # print('test', channel_layer)
+        
 
 
         return Response({

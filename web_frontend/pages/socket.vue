@@ -1,6 +1,8 @@
 <template>
   <v-app>
     <v-text-field v-model="message" label="message"></v-text-field>
+    <div v-for="(m, i) in messages" v-bind:key="i">{{ m.message }}</div>
+
     <v-btn @click="send">send</v-btn>
   </v-app>
 </template>
@@ -10,22 +12,13 @@ export default {
   data: () => ({
     websocket: null,
     message: null,
+    messages: [],
   }),
   created() {
     // adsf
   },
   mounted() {
     this.connectToWebSocket()
-    // this.websocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/lobby/')
-
-    // this.websocket.onmessage = function (e) {
-    //   const data = JSON.parse(e.data)
-    //   console.log(data.message)
-    // }
-
-    // this.websocket.onclose = function (e) {
-    //   console.error('Chat socket closed unexpectedly')
-    // }
   },
   methods: {
     send() {
@@ -50,7 +43,7 @@ export default {
     },
     onMessage(event) {
       const message = JSON.parse(event.data)
-      // this.messages.push(message)
+      this.messages.push(message)
       console.log(message)
     },
     onError(event) {
