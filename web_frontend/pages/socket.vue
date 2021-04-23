@@ -29,7 +29,13 @@ export default {
       )
     },
     connectToWebSocket() {
-      this.websocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/kek/')
+      console.log(this.$store.getters.getToken)
+      // document.cookie =
+      //   'X-Authorization=' + this.$store.getters.getToken + '; path=/'
+      this.websocket = new WebSocket(
+        'ws://127.0.0.1:8000/ws/chat/kek/',
+        this.$store.getters.getToken
+      )
       this.websocket.onopen = this.onOpen
       this.websocket.onclose = this.onClose
       this.websocket.onmessage = this.onMessage
