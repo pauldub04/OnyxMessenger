@@ -269,6 +269,7 @@ export default {
     onMessage(event) {
       const message = JSON.parse(event.data)
       this.context.messages.push(message.message)
+      this.context.lastMessage = message.message.message
       console.log(message.message)
     },
     onError(event) {

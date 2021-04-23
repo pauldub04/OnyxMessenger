@@ -92,6 +92,9 @@ export const actions = {
       })
       .catch((error) => {
         console.log(error)
+        ctx.commit('setUser', {})
+        ctx.commit('setToken', null)
+        this.$router.push('/')
       })
 
   },

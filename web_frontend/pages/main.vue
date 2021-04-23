@@ -197,7 +197,6 @@ export default {
     this.$store.dispatch('setAuthHeader', this.$store.getters.getToken)
   },
   mounted() {
-    this.overlay = false
     // this.$store.dispatch('fetchUser')
     // console.log(this.$store.getters.getToken)
     this.getChats()
@@ -206,6 +205,8 @@ export default {
       this.onResize()
     })
     window.addEventListener('resize', this.onResize)
+
+    this.overlay = false
   },
   methods: {
     onResize() {
