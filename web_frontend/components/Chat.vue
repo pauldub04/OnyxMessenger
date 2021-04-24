@@ -6,7 +6,29 @@
           <v-img :src="context.userImage" />
         </v-avatar>
       </v-badge>
-      <v-toolbar-title class="ma-2"> {{ context.title }} </v-toolbar-title>
+      <v-toolbar-title class="ma-2" v-if="showUsersCount % 2 == 0">
+        {{ context.title }}
+      </v-toolbar-title>
+      <!-- <v-card
+        class="mx-auto mt-10"
+        max-width="400"
+        tile
+        v-if="showUsersCount % 2 == 1"
+      >
+        <v-list-item two-line v-for="(user, i) in members" v-bind:key="i">
+          <v-list-item-content>
+            <v-list-item-title> {{ user.username }} </v-list-item-title>
+            <v-list-item-subtitle v-if="user.type == 'owner'">
+              owner
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+      <v-btn depressed icon small @click="showUsersCount++">
+        <v-icon v-if="showUsersCount % 2 == 0"> mdi-menu-down </v-icon>
+        <v-icon v-else> mdi-menu-up </v-icon>
+      </v-btn> -->
+
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <!-- <v-text-field
@@ -229,6 +251,7 @@ export default {
       { title: 'Click Me' },
       { title: 'Click Me 2' },
     ],
+    showUsersCount: 0,
     inviteCount: 0,
     inviteUserName: null,
     users: [],
@@ -271,6 +294,7 @@ export default {
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
       console.log(message.message)
+      this.scrollToBottom()
     },
     onError(event) {
       alert('An error occured:', event.data)
@@ -304,6 +328,7 @@ export default {
 
       this.inviteCount++
       this.inviteUserName = null
+      this.getMessages()
       }
     },
     updateFile(file) {
@@ -324,8 +349,9 @@ export default {
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
         .then((response) => {
-          // console.log(response.data)
+          console.log(response.data)
 
+          this.members = response.data.members
           this.context.messages = response.data.messages
           if (response.data.messages.length != 0)
             this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message

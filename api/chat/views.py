@@ -43,29 +43,34 @@ class ChatSessionView(APIView):
                 chat_sessions.append(c)
 
         sessions = []
-        i = 1
+        i = 0
         for c in chat_sessions:
             messages = [chat_session_message.to_json() for chat_session_message in c.messages.all()]
-            if len(messages) == 0:
-                messages = [{'user': {'id': -1, 'username': '', 'email': '', 'first_name': '', 'last_name': ''},
-                             'message': 'No messages yet'}]
+            # if len(messages) == 0:
+            #     messages = [{'user': {'id': -1, 'username': '', 'email': '', 'first_name': '', 'last_name': ''},
+            #                  'message': 'No messages yet'}]
 
-            title = f'Chat {i}'
             i += 1
-            # owner = c.owner
-            # members = c.members.all()
-            # if len([c.user for c in c.members.all()]) == 2:
-            #     for u in [c.user for c in members]:
-            #         print(u.username)
-            #         if u != owner:
-            #             title = u.username
-            #             break
+            owner = c.owner
+            members = [c.user for c in c.members.all()]
+
+            if len(members) == 0:
+                title = f'Chat {i}'
+            elif len(members) == 1:
+                if members[0] == user:
+                    title = f'{owner.username}'
+                else:
+                    title = f'{members[0].username}'
+            else:
+                title = f'{members[0].username}, {members[1].username}'
+                if len(members) > 2:
+                    title += '...'
 
             sessions.append({
                 'uri': c.uri,
                 'username': '',
                 'userImage': '',
-                'lastMessage': messages[-1]['message'],
+                'lastMessage': messages[-1]['message'] if len(messages) > 0 else 'No messages yet',
                 'unreadMessages': 0,
                 'messages': messages,
                 'title': title,
@@ -156,9 +161,30 @@ class ChatSessionMessageView(APIView):
         chat_session = ChatSession.objects.get(uri=uri)
         messages = [chat_session_message.to_json()
                     for chat_session_message in chat_session.messages.all()]
+        owner = chat_session.owner
+
+        chat_members = [c.user for c in chat_session.members.all()]
+        usernames = [{
+            'username': owner.username,
+            'type': 'owner',
+        }]
+        for m in chat_members:
+            # if m == owner:
+            #     usernames.append({
+            #         'username': m.username,
+            #         'type': 'owner',
+            #     })
+            # else:
+            usernames.append({
+                'username': m.username,
+                'type': 'user',
+            })
+
+        # print('get mes: ', members)
 
         return Response({
             'id': chat_session.id, 'uri': chat_session.uri,
+            'members': usernames,
             'messages': messages
         })
 

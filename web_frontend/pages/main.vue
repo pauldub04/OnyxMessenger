@@ -61,6 +61,9 @@
         </v-col>
         <v-col>
           <v-btn class="mt-2" @click="createChat">Создать чат</v-btn>
+          <v-btn depressed icon class="mt-2 ml-2" @click="getChats">
+            <v-icon> mdi-refresh </v-icon>
+          </v-btn>
         </v-col>
       </v-col>
       <v-divider vertical></v-divider>
