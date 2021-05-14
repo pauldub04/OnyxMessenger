@@ -1,16 +1,16 @@
 from django.db import models
-
-
-class ChannelMessage(models.Model):
-    text = models.TextField()
-    date = models.DateTimeField()
-    sender = models.IntegerField()
-    image = models.ImageField()
-    views_count = models.IntegerField(default=0)
+from django.contrib.auth.models import User
 
 
 class Channel(models.Model):
-    name = models.CharField(63)
-    description = models.TextField()
-    admin = models.IntegerField()
-    messages = models.ManyToManyField(ChannelMessage)
+    owner = models.ForeignKey(User, related_name='channels', on_delete=models.CASCADE)
+    theme = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    icon = models.ImageField()
+
+
+class Post(models.Model):
+    annotation = models.CharField(max_length=100, blank=True, default='')
+    body = models.TextField(blank=True, default='')
+    creator_channel = models.ForeignKey(Channel, related_name='posts', on_delete=models.CASCADE)
+    icon = models.ImageField()

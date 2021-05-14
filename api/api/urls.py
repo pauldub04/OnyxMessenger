@@ -29,5 +29,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
 
-    path('api/', include('chat.urls'))
+    path('api/', include('chat.urls')),
+
+    path('channels/', include('channels.urls'))
 ]
