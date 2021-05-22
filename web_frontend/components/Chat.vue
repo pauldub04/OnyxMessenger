@@ -65,7 +65,7 @@
         <v-btn icon fab dark small
           ><v-icon>{{ icons.chatInfo }}</v-icon></v-btn
         >
-        <v-menu offset-y>
+        <!-- <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon fab dark small v-on="on">
               <v-icon>{{ icons.extraInfo }}</v-icon>
@@ -79,7 +79,7 @@
               <v-list-item-title> {{ item.title }} </v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-menu>
+        </v-menu> -->
       </v-toolbar-items>
     </v-toolbar>
     <v-divider></v-divider>
@@ -246,10 +246,6 @@ export default {
     },
     files: [],
     itemsDropdownMenu: [
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me 2' },
     ],
     showUsersCount: 0,
     inviteCount: 0,
@@ -408,7 +404,6 @@ export default {
       alert('Audio done!')
     },
     selectEmoji(emoji) {
-      this.overlay = false
       this.message += emoji.data
     },
     onClickOutsideEmojiPicker() {
