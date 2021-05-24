@@ -2,7 +2,7 @@
   <v-app>
     <v-container>
       <v-toolbar>
-        <v-toolbar-title>Messenger</v-toolbar-title>
+        <v-toolbar-title>ONYX</v-toolbar-title>
         <v-spacer></v-spacer>
         About Us
       </v-toolbar>

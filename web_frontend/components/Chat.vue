@@ -92,15 +92,15 @@
           :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
         >
           <v-spacer></v-spacer>
-          <v-card class="mt-10 mr-2" max-width="350px" color="blue" dark>
+          <v-card class="mt-16 mr-2" max-width="350px" color="blue" dark>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
+                  <h3>{{ message.user.username }}</h3>
+                </div>
+                <div>
                   {{ message.message }}
                 </div>
-                <v-list-item-subtitle>
-                  {{ message.date }}
-                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-card>
@@ -132,17 +132,18 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="mb-4">
+                  <h3>{{ message.user.username }}</h3>
+                </div>
+                <div>
                   {{ message.message }}
                 </div>
-                <v-list-item-subtitle>
-                  {{ message.date }}
-                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-card>
         </v-app-bar>
       </v-list-item>
       <v-btn
+        :hidden="checkIsDown"
         style="background-color: grey"
         large
         icon
@@ -245,15 +246,14 @@ export default {
       down: mdiChevronDown,
     },
     files: [],
-    itemsDropdownMenu: [
-    ],
+    itemsDropdownMenu: [],
     showUsersCount: 0,
     inviteCount: 0,
     inviteUserName: null,
     users: [],
   }),
   watch: {},
-  created () {
+  created() {
     // setInterval(this.getMessages, 3000)
   },
   mounted() {
@@ -261,12 +261,18 @@ export default {
     this.getMessages()
     this.connectToWebSocket()
 
-    this.scrollToBottom();
+    this.scrollToBottom()
+    this.checkIsDown()
 
     this.$nextTick(function () {
       this.matchHeight()
+      this.checkIsDown()
     })
     window.addEventListener('resize', this.matchHeight)
+    window.addEventListener('resize', this.checkIsDown)
+  },
+  computed() {
+    checkIsDown()
   },
   methods: {
     connectToWebSocket() {
@@ -287,49 +293,62 @@ export default {
     },
     onMessage(event) {
       const message = JSON.parse(event.data)
+      console.log(this.$el.querySelector('#messageContainer').scrollHeight)
+      console.log(this.$el.querySelector('#messageContainer').scrollTopMax)
+      console.log(this.$el.querySelector('#messageContainer').scrollTop)
+      if (
+        this.$el.querySelector('#messageContainer').scrollTop ===
+        this.$el.querySelector('#messageContainer').scrollTopMax
+      ) {
+        setTimeout(() => {
+          this.scrollToBottom(), 2000
+        })
+      }
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
       console.log(message.message)
-      this.scrollToBottom()
     },
     onError(event) {
       alert('An error occured:', event.data)
     },
 
-
     // ----------------------------------------------------
+    checkIsDown() {
+      return this.$el.querySelector('#messageContainer').scrollTop === this.$el.querySelector('#messageContainer').scrollTopMax
+    },
+
     scrollToBottom() {
-      const container = this.$el.querySelector("#messageContainer");
-      container.scrollTop = container.scrollHeight;
+      const container = this.$el.querySelector('#messageContainer')
+      container.scrollTop = container.scrollTopMax
     },
     toInvite() {
-      this.inviteCount++;
+      this.inviteCount++
     },
     invite() {
       if (this.inviteUserName !== null) {
         console.log(this.inviteUserName)
 
-      for (let username of this.inviteUserName)
-        this.$axios
-          .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
-            username: username
-          })
-          .then((response) => {
-            // console.log(response.data)
-            alert(response.data.message)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        for (let username of this.inviteUserName)
+          this.$axios
+            .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
+              username: username,
+            })
+            .then((response) => {
+              // console.log(response.data)
+              alert(response.data.message)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
 
-      this.inviteCount++
-      this.inviteUserName = null
-      this.getMessages()
+        this.inviteCount++
+        this.inviteUserName = null
+        this.getMessages()
       }
     },
     updateFile(file) {
       this.files.push(file)
-      console.log("File in files!")
+      console.log('File in files!')
     },
     getUsers() {
       this.$axios
@@ -350,7 +369,8 @@ export default {
           this.members = response.data.members
           this.context.messages = response.data.messages
           if (response.data.messages.length != 0)
-            this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
+            this.context.lastMessage =
+              response.data.messages[response.data.messages.length - 1].message
           // console.log(this.context.messages)
         })
         .catch((error) => {
@@ -377,8 +397,7 @@ export default {
       }
     },
     sendMessage() {
-      if (this.message == null || this.message == '')
-        return
+      if (this.message == null || this.message == '') return
       this.websocket.send(
         JSON.stringify({
           message: this.message,
@@ -398,7 +417,7 @@ export default {
       //     console.log(error)
       //   })
       this.clearMessage()
-      this.scrollToBottom();
+      // this.scrollToBottom()
     },
     makeAudioMessage() {
       alert('Audio done!')
@@ -414,9 +433,9 @@ export default {
 </script>
 
 <style>
- .v-btn--example {
-    bottom: 10;
-    position: absolute;
-    margin: 0 0 80px 150px;
-  }
+.v-btn--example {
+  bottom: 10;
+  position: absolute;
+  margin: 0 0 80px 150px;
+}
 </style>
