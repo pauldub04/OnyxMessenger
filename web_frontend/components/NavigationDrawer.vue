@@ -44,7 +44,7 @@
           <v-list-item-title> Настройки </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link @click="click">
+      <v-list-item to="/create-chat">
         <v-list-item-icon>
           <v-icon> mdi-message-text </v-icon>
         </v-list-item-icon>
@@ -80,7 +80,11 @@ export default {
     return {
       items: [
         { label: 'Настройки', icon: 'mdi-cog', link: '/settings' },
-        { label: 'Создать чат', icon: 'mdi-message-text', link: '/' },
+        {
+          label: 'Создать чат',
+          icon: 'mdi-message-text',
+          link: '/create-chat',
+        },
       ],
     }
   },
