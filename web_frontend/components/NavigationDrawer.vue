@@ -11,7 +11,7 @@
         </v-list-item-avatar>
       </v-list-item>
 
-      <v-list-item link>
+      <v-list-item :to="localePath('/main')">
         <v-list-item-content>
           <v-list-item-title class="title">{{ username }}</v-list-item-title>
           <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
@@ -35,22 +35,38 @@
           <v-list-item-title>{{ item.label }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item> -->
-      <v-list-item link>
+      <v-list-item :to="localePath('/main')">
+        <v-list-item-icon>
+          <v-icon> mdi-message-outline </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ $t('pages.NavigationDrawer.chats') }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item :to="localePath('/settings')">
         <v-list-item-icon>
           <v-icon> mdi-cog </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title> Настройки </v-list-item-title>
+          <v-list-item-title>
+            {{ $t('pages.NavigationDrawer.settings') }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item to="/create-chat">
+      <v-list-item :to="localePath('/create-chat')">
         <v-list-item-icon>
           <v-icon> mdi-message-text </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title> Создать чат </v-list-item-title>
+          <v-list-item-title>
+            {{ $t('pages.NavigationDrawer.createChat') }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -62,7 +78,9 @@
           <v-icon>mdi-logout</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Выйти из системы</v-list-item-title>
+          <v-list-item-title>{{
+            $t('pages.NavigationDrawer.logOut')
+          }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

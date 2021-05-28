@@ -9,8 +9,8 @@
         :username="$store.state.user.username"
         :email="$store.state.user.email"
       ></NavigationDrawer>
-      <v-col cols="3" class="grey darken-4">
-        <v-list :max-height="height" class="overflow-y-auto dark">
+      <v-col cols="3">
+        <v-list :max-height="height" class="overflow-y-auto">
           <v-list-item-group v-model="selectedItem">
             <div v-for="(contact, index) in contacts" :key="index">
               <v-list-item class="ma-2" link flat>
@@ -31,6 +31,13 @@
                 <v-list-item-content>
                   <v-list-item-title>{{ contact.title }}</v-list-item-title>
                   <v-list-item-subtitle>
+                    <span class="font-weight-bold info--text"
+                      >{{
+                        contact.messages[contact.messages.length - 1].user
+                          .username
+                      }}:</span
+                    >
+
                     {{ contact.lastMessage }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -240,6 +247,7 @@ export default {
         })
     },
     getChats() {
+      console.log(this.$vuetify.theme.themes.name)
       console.log('kek2')
       this.$axios
         .get('http://localhost:8000/api/chats/')
