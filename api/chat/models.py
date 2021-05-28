@@ -36,6 +36,8 @@ class ChatSession(TrackableDateModel):
 
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     uri = models.URLField(default=_generate_unique_uri)
+    title = models.TextField()
+    type = models.BooleanField()
 
 
 class ChatSessionMessage(TrackableDateModel):

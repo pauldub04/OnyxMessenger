@@ -6,42 +6,37 @@
           <v-img :src="context.userImage" />
         </v-avatar>
       </v-badge>
-      <v-toolbar-title class="ma-2" v-if="showUsersCount % 2 == 0">
-        {{ context.title }}
-      </v-toolbar-title>
-      <!-- <v-card
-        class="mx-auto mt-10"
-        max-width="400"
-        tile
-        v-if="showUsersCount % 2 == 1"
-      >
-        <v-list-item two-line v-for="(user, i) in members" v-bind:key="i">
-          <v-list-item-content>
-            <v-list-item-title> {{ user.username }} </v-list-item-title>
-            <v-list-item-subtitle v-if="user.type == 'owner'">
-              owner
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
-      <v-btn depressed icon small @click="showUsersCount++">
-        <v-icon v-if="showUsersCount % 2 == 0"> mdi-menu-down </v-icon>
-        <v-icon v-else> mdi-menu-up </v-icon>
-      </v-btn> -->
+      <v-row @click="printUsers">
+        <v-toolbar-title class="ma-2 ml-5" v-if="showUsersCount % 2 == 0">
+          {{ context.title }}
+        </v-toolbar-title>
+        <v-dialog v-model="showSettings" width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small v-bind="attrs" v-on="on" class="mt-2 ml-2">
+              <v-icon> mdi-account </v-icon>
+            </v-btn>
+          </template>
 
+          <v-card>
+            <v-card-title class="headline"> {{ context.title }} </v-card-title>
+
+            <v-card-text v-for="(m, i) in context.members" v-bind:key="i">
+              {{ m }}
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="showSettings = false">
+                Закрыть
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <!-- <v-text-field
-          v-if="inviteCount % 2 == 1"
-          v-model="inviteUserName"
-          class="mt-4 mr-5"
-          label="Добавить пользователя"
-          placeholder="Введите username"
-          append-outer-icon="mdi-plus"
-          clearable
-          @click:append-outer="invite"
-        >
-        </v-text-field> -->
         <v-autocomplete
           chips
           deletable-chips
@@ -227,6 +222,7 @@ export default {
     },
   },
   data: () => ({
+    showSettings: false,
     message: '',
     user_id: 1,
     height: 0,
@@ -257,6 +253,7 @@ export default {
     // setInterval(this.getMessages, 3000)
   },
   mounted() {
+    console.log(this.context.members)
     this.getUsers()
     this.getMessages()
     this.connectToWebSocket()
@@ -355,6 +352,7 @@ export default {
         .get(`http://127.0.0.1:8000/api/users/all/`)
         .then((response) => {
           this.users = response.data.users
+          console.log(response.data.users)
         })
         .catch((error) => {
           console.log(error)
@@ -405,17 +403,6 @@ export default {
           uri: this.context.uri,
         })
       )
-      // this.$axios
-      //   .post(`http://localhost:8000/api/chats/${this.context.uri}/messages/`, {
-      //     message: this.message,
-      //   })
-      //   .then((response) => {
-      //     console.log(response.data)
-      //     this.getMessages()
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //   })
       this.clearMessage()
       // this.scrollToBottom()
     },
@@ -427,6 +414,9 @@ export default {
     },
     onClickOutsideEmojiPicker() {
       this.overlay = false
+    },
+    printUsers() {
+      console.log(this.context.members)
     },
   },
 }
