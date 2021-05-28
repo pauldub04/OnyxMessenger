@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-toolbar id="info-bar" ref="infoBar" flat dark>
+    <v-toolbar id="info-bar" ref="infoBar" flat>
       <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
         <v-avatar class="mr-2" size="40" elevation="10">
           <v-img :src="context.userImage" />
@@ -51,18 +51,18 @@
           @click:append-outer="invite"
           label="Добавить пользователя"
         ></v-autocomplete>
-        <v-btn icon fab dark small @click="toInvite"
+        <v-btn icon fab small @click="toInvite"
           ><v-icon>{{ icons.accountPlus }}</v-icon>
         </v-btn>
-        <v-btn icon fab dark small
+        <v-btn icon fab small
           ><v-icon>{{ icons.searchIcon }}</v-icon></v-btn
         >
-        <v-btn icon fab dark small
+        <v-btn icon fab small
           ><v-icon>{{ icons.chatInfo }}</v-icon></v-btn
         >
         <!-- <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" icon fab dark small v-on="on">
+            <v-btn v-bind="attrs" icon fab  small v-on="on">
               <v-icon>{{ icons.extraInfo }}</v-icon>
             </v-btn>
           </template>
@@ -78,7 +78,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-divider></v-divider>
-    <v-list id="messageContainer" :height="height" class="overflow-y-auto dark">
+    <v-list id="messageContainer" :height="height" class="overflow-y-auto">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
         <v-app-bar
           v-if="message.user.id === $store.state.user.id"
@@ -87,9 +87,9 @@
           :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
         >
           <v-spacer></v-spacer>
-          <v-card class="mt-16 mr-2" max-width="350px" color="blue" dark>
+          <v-card class="mt-16 mr-2" max-width="350px" color="primary">
             <v-list-item three-line>
-              <v-list-item-content>
+              <v-list-item-content class="white--text">
                 <div class="mb-4">
                   <h3>{{ message.user.username }}</h3>
                 </div>
@@ -123,9 +123,9 @@
               <v-img :src="context.userImage" />
             </v-avatar>
           </v-badge>
-          <v-card class="mt-10" max-width="350px" color="grey">
+          <v-card class="mt-10" max-width="350px" color="accent">
             <v-list-item three-line>
-              <v-list-item-content>
+              <v-list-item-content class="white--text">
                 <div class="mb-4">
                   <h3>{{ message.user.username }}</h3>
                 </div>
@@ -138,14 +138,13 @@
         </v-app-bar>
       </v-list-item>
       <v-btn
-        :hidden="checkIsDown"
-        style="background-color: grey"
+        v-if="checkIsDown"
         large
         icon
         bottom
         right
         absolute
-        class="mr-2 mb-16"
+        class="mr-2 mb-16 grey white--text"
         @click="scrollToBottom"
       >
         <v-icon>{{ icons.down }}</v-icon>
@@ -311,7 +310,10 @@ export default {
 
     // ----------------------------------------------------
     checkIsDown() {
-      return this.$el.querySelector('#messageContainer').scrollTop === this.$el.querySelector('#messageContainer').scrollTopMax
+      return (
+        this.$el.querySelector('#messageContainer').scrollTop ===
+        this.$el.querySelector('#messageContainer').scrollTopMax
+      )
     },
 
     scrollToBottom() {

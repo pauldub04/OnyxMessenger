@@ -17,9 +17,7 @@ export default {
   css: ['@/assets/css/style.css', '@/assets/fonts/montserrat.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [
-    { src: '~/plugins/vuex-persist', ssr: false },
-  ],
+  plugins: [{ src: '~/plugins/vuex-persist', ssr: false }],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -36,6 +34,31 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    [
+      'nuxt-i18n',
+      {
+        locales: [
+          {
+            name: 'Русский',
+            code: 'ru',
+            iso: 'ru-RU',
+            file: 'ru-RU.js',
+            flagSrc: 'https://cdn.vuetifyjs.com/images/flags/ru.png',
+          },
+          {
+            name: 'English',
+            code: 'en',
+            iso: 'en-US',
+            file: 'en-US.js',
+            flagSrc: 'https://cdn.vuetifyjs.com/images/flags/us.png',
+          },
+        ],
+        langDir: 'lang/',
+        defaultLocale: 'ru',
+
+        fallbackLocale: 'en',
+      },
+    ],
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -45,9 +68,19 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
+        name: 'Base Theme',
         dark: {
+          primary: colors.blue.darken2,
+          accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+        },
+        light: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,

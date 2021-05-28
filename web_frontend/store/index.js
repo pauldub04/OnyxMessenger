@@ -51,7 +51,7 @@ export const actions = {
           await ctx.dispatch('fetchUser')
           
           console.log('fetched, pushing')
-          this.$router.push('/main')
+          this.$router.push(this.localePath('/main'))
         })
         .catch((error) => {
           console.log(error.response)

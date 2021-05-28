@@ -1,9 +1,65 @@
 <template>
-  <v-container fill-height>
+  <v-main>
     <v-container>
+      <v-toolbar>
+        <v-toolbar-title>ONYX - the Messenger</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-menu
+          v-model="menu"
+          :close-on-content-click="false"
+          :nudge-width="50"
+          offset-y
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn text v-on="on">
+              <v-list-item>
+                <v-list-item-avatar
+                  ><v-img
+                    :src="
+                      $i18n.locale === 'en'
+                        ? 'https://cdn.vuetifyjs.com/images/flags/us.png'
+                        : 'https://cdn.vuetifyjs.com/images/flags/ru.png'
+                    "
+                  ></v-img
+                ></v-list-item-avatar>
+                <v-list-item-content>{{
+                  $i18n.locale === 'en' ? 'English' : 'Русский'
+                }}</v-list-item-content>
+              </v-list-item>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="locale in availableLocales"
+              :key="locale.code"
+              link
+              hover
+              @click="$i18n.setLocale(locale.code)"
+            >
+              <v-list-item-avatar
+                ><v-img :src="locale.flagSrc"></v-img
+              ></v-list-item-avatar>
+              <v-list-item-content>{{ locale.name }}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-toolbar>
+    </v-container>
+
+    <v-container fill-height>
       <v-card class="mx-auto" max-width="500">
         <v-card-title class="title font-weight-regular justify-space-between">
-          <span>{{ currentTitle }}</span>
+          <span v-if="this.step === 1">{{
+            $t('pages.registrationPage.setUsername.title')
+          }}</span>
+          <span v-else-if="this.step === 2">{{
+            $t('pages.registrationPage.setEmail.title')
+          }}</span>
+          <span v-else-if="this.step === 3">{{
+            $t('pages.registrationPage.setPassword.title')
+          }}</span>
+          <span v-else>{{ $t('pages.registrationPage.checkData.title') }}</span>
           <v-avatar
             color="primary lighten-2"
             class="subheading white--text"
@@ -17,12 +73,12 @@
             <v-card-text>
               <v-text-field
                 v-model="username"
-                label="Username"
-                :rules="rules[rules.required]"
+                :label="$t('pages.registrationPage.setUsername.placeholder')"
+                :rules="[(value) => !!value || $t('fieldRequired')]"
                 required
               ></v-text-field>
               <span class="caption grey--text text--darken-1">
-                This is the username you will use to login to your account
+                {{ $t('pages.registrationPage.setUsername.explanation') }}
               </span>
             </v-card-text>
           </v-window-item>
@@ -31,11 +87,14 @@
             <v-card-text>
               <v-text-field
                 v-model="email"
-                label="Email"
-                :rules="rules[rules.email]"
+                :label="$t('pages.registrationPage.setEmail.placeholder')"
+                :rules="[
+                  (v) => !!v || $t('emailRequired'),
+                  (v) => /.+@.+\..+/.test(v) || $t('emailNotValid'),
+                ]"
               ></v-text-field>
               <span class="caption grey--text text--darken-1">
-                This is the email you will use to login to your account
+                {{ $t('pages.registrationPage.setEmail.explanation') }}
               </span>
             </v-card-text>
           </v-window-item>
@@ -44,33 +103,40 @@
             <v-card-text>
               <v-text-field
                 v-model="password"
-                label="Password"
+                :label="$t('pages.registrationPage.setPassword.placeholder')"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-                :rules="[rules.required, rules.min]"
+                :rules="[
+                  (value) => !!value || $t('fieldRequired'),
+                  (value) => value.length >= 8 || $t('passwordMin'),
+                ]"
                 :type="show ? 'text' : 'password'"
                 name="input-10-1"
-                hint="At least 8 characters"
+                :hint="$t('pages.registrationPage.setPassword.hint')"
                 counter
                 @click:append="show = !show"
               ></v-text-field>
               <v-text-field
                 v-model="confirm_password"
-                label="Confirm Password"
+                :label="
+                  $t('pages.registrationPage.setPassword.confirmPlaceholder')
+                "
                 :type="show ? 'text' : 'password'"
                 name="input-10-1"
                 counter
               ></v-text-field>
               <span class="caption grey--text text--darken-1">
-                Please enter a password for your account
+                {{ $t('pages.registrationPage.setPassword.explanation') }}
               </span>
             </v-card-text>
           </v-window-item>
 
           <v-window-item :value="4">
             <div class="pa-4 text-center">
-              <h3 class="title font-weight-light mb-2">You are so close!</h3>
+              <h3 class="title font-weight-light mb-2">
+                {{ $t('pages.registrationPage.checkData.subTitle') }}
+              </h3>
               <span class="caption grey--text">
-                Check your data before you sign up!
+                {{ $t('pages.registrationPage.checkData.explanation') }}
               </span>
               <v-text-field v-model="username" readonly></v-text-field>
               <v-text-field
@@ -87,7 +153,9 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn text @click="back"> Back </v-btn>
+          <v-btn text @click="back">
+            {{ $t('pages.registrationPage.back') }}
+          </v-btn>
           <v-spacer></v-spacer>
           <v-btn
             v-if="step === 1"
@@ -95,7 +163,7 @@
             color="primary"
             depressed
             @click="step++"
-            >NEXT</v-btn
+            >{{ $t('pages.registrationPage.next') }}</v-btn
           >
           <v-btn
             v-else-if="step === 2"
@@ -103,7 +171,7 @@
             color="primary"
             depressed
             @click="step++"
-            >NEXT</v-btn
+            >{{ $t('pages.registrationPage.next') }}</v-btn
           >
           <v-btn
             v-else-if="step === 3"
@@ -116,21 +184,22 @@
             depressed
             @click="step++"
           >
-            Next
+            {{ $t('pages.registrationPage.next') }}
           </v-btn>
           <v-btn v-else color="primary" depressed @click="signUp">
-            SIGN UP
+            {{ $t('pages.registrationPage.signUp') }}
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-container>
-  </v-container>
+  </v-main>
 </template>
 
 <script>
 export default {
   name: 'Registration',
   data: () => ({
+    menu: false,
     step: 1,
     show: false,
     showAgreement: false,
@@ -148,20 +217,11 @@ export default {
     },
   }),
   computed: {
-    currentTitle() {
-      switch (this.step) {
-        case 1:
-          return 'Set your username'
-        case 2:
-          return 'Set your email'
-        case 3:
-          return 'Set your password'
-        default:
-          return 'Almost done'
-      }
-    },
     checkEmail() {
       return /.+@.+\..+/.test(this.email) && !!this.email
+    },
+    availableLocales() {
+      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
     },
   },
   beforeCreate() {
@@ -176,7 +236,7 @@ export default {
       })
     },
     back() {
-      if (this.step === 1) this.$router.push('/')
+      if (this.step === 1) this.$router.push(this.localePath('/'))
       else this.step--
     },
   },
