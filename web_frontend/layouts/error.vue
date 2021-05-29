@@ -60,7 +60,12 @@
 
 <script>
 export default {
-  props: ['error'],
+  props: {
+    error: {
+      type: Object,
+      required: true,
+    },
+  },
   data: () => ({
     menu: false,
   }),

@@ -174,11 +174,11 @@ export default {
       this.$axios
         .post('http://localhost:8000/api/chats/', formData)
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           this.$router.push('/main')
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
     getUsers() {
@@ -187,8 +187,8 @@ export default {
         .then((response) => {
           this.users = response.data.users
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
   },

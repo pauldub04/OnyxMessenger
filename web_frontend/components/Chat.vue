@@ -7,10 +7,10 @@
         </v-avatar>
       </v-badge> -->
       <v-avatar
+        v-if="context.image !== 'null'"
         class="mr-2"
         size="40"
         elevation="10"
-        v-if="context.image !== 'null'"
       >
         <v-img :src="'http://localhost:8000/media/' + context.image" />
       </v-avatar>
@@ -28,7 +28,10 @@
           <v-card>
             <v-card-title class="headline"> {{ context.title }} </v-card-title>
 
-            <v-card-text v-for="(m, i) in context.members" :key="i">
+            <v-card-text v-if="context.members.length === 0">
+              {{ $t('pages.chat.chatWith') }} {{ context.title }}
+            </v-card-text>
+            <v-card-text v-for="(m, i) in context.members" v-else :key="i">
               {{ m }}
             </v-card-text>
 
@@ -61,12 +64,12 @@
         <v-btn icon fab small @click="toInvite"
           ><v-icon>{{ icons.accountPlus }}</v-icon>
         </v-btn>
-        <v-btn icon fab small
+        <!-- <v-btn icon fab small
           ><v-icon>{{ icons.searchIcon }}</v-icon></v-btn
         >
         <v-btn icon fab small
           ><v-icon>{{ icons.chatInfo }}</v-icon></v-btn
-        >
+        > -->
         <!-- <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon fab  small v-on="on">
@@ -171,17 +174,16 @@
       <v-btn icon @click="overlay = !overlay">
         <v-icon>{{ icons.smile }}</v-icon>
       </v-btn>
-      <v-btn icon>
+      <!-- <v-btn icon>
         <v-icon @click="messageOrAudio">
           {{ message ? icons.send : icons.micro }}
         </v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-app-bar>
   </v-main>
 </template>
 
 <script>
-/* eslint-disable */
 import {
   mdiMagnify,
   mdiPageLayoutSidebarRight,
@@ -237,17 +239,7 @@ export default {
     inviteUserName: null,
     users: [],
   }),
-  watch: {},
-  computed: {
-    chatImage() {
-      return 'http://localhost:8000/media/' + this.context.image
-    }
-  },
-  created() {
-    // setInterval(this.getMessages, 3000)
-  },
   mounted() {
-    console.log('kj', 'http://localhost:8000/media/' + this.context.image)
     this.$store.dispatch('setTheme', this.$i18n)
     this.getUsers()
     this.getMessages()
@@ -263,9 +255,6 @@ export default {
     window.addEventListener('resize', this.matchHeight)
     window.addEventListener('resize', this.checkIsDown)
   },
-  computed() {
-    checkIsDown()
-  },
   methods: {
     connectToWebSocket() {
       this.websocket = new WebSocket(
@@ -278,27 +267,25 @@ export default {
       this.websocket.onerror = this.onError
     },
     onOpen(event) {
-      console.log('Connection opened.', event.data)
+      // console.log('Connection opened.', event.data)
     },
     onClose(event) {
-      console.log('Connection closed.', event.data)
+      // console.log('Connection closed.', event.data)
     },
     onMessage(event) {
       const message = JSON.parse(event.data)
-      console.log(this.$el.querySelector('#messageContainer').scrollHeight)
-      console.log(this.$el.querySelector('#messageContainer').scrollTopMax)
-      console.log(this.$el.querySelector('#messageContainer').scrollTop)
+      // console.log(this.$el.querySelector('#messageContainer').scrollHeight)
+      // console.log(this.$el.querySelector('#messageContainer').scrollTopMax)
+      // console.log(this.$el.querySelector('#messageContainer').scrollTop)
       if (
         this.$el.querySelector('#messageContainer').scrollTop ===
         this.$el.querySelector('#messageContainer').scrollTopMax
       ) {
-        setTimeout(() => {
-          this.scrollToBottom(), 2000
-        })
+        setTimeout(this.scrollToBottom(), 2000)
       }
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
-      console.log(message.message)
+      // console.log(message.message)
     },
     onError(event) {
       alert('An error occured:', event.data)
@@ -321,19 +308,21 @@ export default {
     },
     invite() {
       if (this.inviteUserName !== null) {
-        console.log(this.inviteUserName)
+        // console.log(this.inviteUserName)
 
-        for (let username of this.inviteUserName)
+        for (const username of this.inviteUserName)
           this.$axios
             .patch(`http://127.0.0.1:8000/api/chats/${this.context.uri}/`, {
-              username: username,
+              username,
             })
             .then((response) => {
               // console.log(response.data)
               alert(response.data.message)
+              this.getUsers()
+              this.getMessages()
             })
-            .catch((error) => {
-              console.log(error)
+            .catch(() => {
+              // console.log(error)
             })
 
         this.inviteCount++
@@ -343,34 +332,34 @@ export default {
     },
     updateFile(file) {
       this.files.push(file)
-      console.log('File in files!')
+      // console.log('File in files!')
     },
     getUsers() {
       this.$axios
         .get(`http://127.0.0.1:8000/api/users/all/`)
         .then((response) => {
           this.users = response.data.users
-          console.log(response.data.users)
+          // console.log(response.data.users)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
     getMessages() {
       this.$axios
         .get(`http://localhost:8000/api/chats/${this.context.uri}/messages/`)
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
 
           this.members = response.data.members
           this.context.messages = response.data.messages
-          if (response.data.messages.length != 0)
+          if (response.data.messages.length !== 0)
             this.context.lastMessage =
               response.data.messages[response.data.messages.length - 1].message
           // console.log(this.context.messages)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
     matchHeight() {
@@ -393,7 +382,7 @@ export default {
       }
     },
     sendMessage() {
-      if (this.message == null || this.message == '') return
+      if (this.message === null || this.message === '') return
       this.websocket.send(
         JSON.stringify({
           message: this.message,
@@ -414,7 +403,7 @@ export default {
       this.overlay = false
     },
     printUsers() {
-      console.log(this.context.members)
+      // console.log(this.context.members)
     },
   },
 }

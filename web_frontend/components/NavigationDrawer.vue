@@ -81,8 +81,14 @@
 export default {
   name: 'NavigationDrawer',
   props: {
-    username: String,
-    email: String,
+    username: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -98,7 +104,7 @@ export default {
   },
   methods: {
     click() {
-      console.log('df')
+      // console.log('df')
       this.$nuxt.$emit('createChat')
     },
   },

@@ -115,24 +115,24 @@ export default {
       this.$axios
         .post('http://localhost:8000/api/chats/')
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           this.getChats()
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
     getChats() {
-      console.log(this.$vuetify.theme.themes.name)
-      console.log('kek2')
+      // console.log(this.$vuetify.theme.themes.name)
+      // console.log('kek2')
       this.$axios
         .get('http://localhost:8000/api/chats/')
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           this.contacts = response.data.sessions
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          // console.log(error)
         })
     },
   },

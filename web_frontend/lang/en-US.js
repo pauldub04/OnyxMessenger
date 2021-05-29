@@ -59,6 +59,9 @@ export default {
       changeColorButton: 'Change Color Theme',
       changeLanguage: 'Change language',
     },
+    chat: {
+      chatWith: 'Chat with ',
+    },
     createChat: {
       label: 'Create Chat',
       stepOne: {

@@ -73,8 +73,8 @@
                         </v-list-item>
                         <div class="my-2">
                           <v-chip
-                            v-for="(key, index) in Object.keys(theme.dark)"
-                            :key="index"
+                            v-for="(key, i) in Object.keys(theme.dark)"
+                            :key="i"
                             class="mx-1"
                             label
                             :color="theme.dark[key]"
@@ -84,8 +84,8 @@
                         </div>
                         <div class="my-2">
                           <v-chip
-                            v-for="(key, index) in Object.keys(theme.light)"
-                            :key="index"
+                            v-for="(key, i) in Object.keys(theme.light)"
+                            :key="i"
                             class="mx-1"
                             label
                             :color="theme.light[key]"
@@ -227,6 +227,12 @@ export default {
       return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
     },
   },
+  watch: {
+    isDark() {
+      this.$vuetify.theme.dark = this.isDark
+      localStorage.setItem('dark_theme', this.isDark)
+    },
+  },
   mounted() {
     this.isDark = JSON.parse(localStorage.getItem('dark_theme')) || 0
     this.$store.dispatch('setTheme', this.$i18n)
@@ -234,7 +240,7 @@ export default {
   methods: {
     setTheme(theme) {
       localStorage.setItem('theme', JSON.stringify(theme))
-      console.log('t', theme)
+      // console.log('t', theme)
       this.menu = false
       const name = theme.name
       const dark = theme.dark
@@ -252,12 +258,6 @@ export default {
     setLocale(code) {
       localStorage.setItem('locale', JSON.stringify(code))
       this.$i18n.setLocale(code)
-    },
-  },
-  watch: {
-    isDark() {
-      this.$vuetify.theme.dark = this.isDark
-      localStorage.setItem('dark_theme', this.isDark)
     },
   },
 }

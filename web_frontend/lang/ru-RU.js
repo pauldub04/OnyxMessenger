@@ -59,6 +59,9 @@ export default {
       changeColorButton: 'Изменить цветовое оформление',
       changeLanguage: 'Изменить язык',
     },
+    chat: {
+      chatWith: 'Чат с ',
+    },
     createChat: {
       label: 'Создать чат',
       stepOne: {
