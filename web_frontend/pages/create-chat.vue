@@ -44,7 +44,7 @@
                 :items="users"
                 v-model="inviteUserName"
                 class="mt-4 mr-5"
-                placeholder="Введите username"
+                :placeholder="$t('pages.createChat.stepTwo.placeholderOne')"
                 clearable
                 :label="$t('pages.createChat.stepTwo.placeholderOne')"
               ></v-autocomplete>
@@ -57,7 +57,7 @@
                 deletable-chips
                 multiple
                 class="mt-4 mr-5"
-                placeholder="Введите username"
+                :placeholder="$t('pages.createChat.stepTwo.placeholderTwo')"
                 clearable
                 :label="$t('pages.createChat.stepTwo.placeholderTwo')"
               ></v-autocomplete>
@@ -87,7 +87,9 @@
                 <v-text-field
                   :label="$t('pages.createChat.createChat')"
                   v-model="chatName"
-                  :rules="[(v) => !!v || 'Введите название']"
+                  :rules="[
+                    (v) => !!v || $t('pages.createChat.stepThree.titleRules'),
+                  ]"
                   required
                   clearable
                 ></v-text-field>
@@ -132,6 +134,9 @@ export default {
   }),
   created() {
     this.getUsers()
+  },
+  mounted() {
+    this.$store.dispatch('setTheme', this.$i18n)
   },
   methods: {
     createChat() {

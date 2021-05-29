@@ -253,6 +253,7 @@ export default {
   },
   mounted() {
     console.log(this.context.members)
+    this.$store.dispatch('setTheme', this.$i18n)
     this.getUsers()
     this.getMessages()
     this.connectToWebSocket()

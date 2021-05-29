@@ -67,6 +67,9 @@ export default {
         placeholderOne: 'Введите никнейм',
         placeholderTwo: 'Введите никнеймы',
       },
+      stepThree: {
+        titleRules: 'Введите название',
+      },
       continue: 'Продолжить',
       createChat: 'Создать чат',
       chatName: 'Название чата',

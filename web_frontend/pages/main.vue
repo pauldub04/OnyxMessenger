@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-overlay :value="overlay" opacity="1">
+    <v-overlay :value="overlay">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </v-overlay>
 
@@ -105,6 +105,7 @@ export default {
   mounted() {
     // this.$store.dispatch('fetchUser')
     // console.log(this.$store.getters.getToken)
+    this.$store.dispatch('setTheme', this.$i18n)
     this.getChats()
 
     this.$nextTick(function () {
