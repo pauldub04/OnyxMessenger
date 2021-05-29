@@ -1,6 +1,9 @@
 export default {
   username: 'Username',
   password: 'Password',
+  error404: 'Page not found',
+  toHome: 'Go back home',
+  errorOccured: 'An error occured',
   fieldRequired: 'This field is required',
   submit: 'Submit',
   emailRequired: 'E-mail is required',

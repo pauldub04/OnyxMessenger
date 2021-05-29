@@ -55,7 +55,7 @@ export default {
         ],
         langDir: 'lang/',
         defaultLocale: 'ru',
-
+        seo: false,
         fallbackLocale: 'en',
       },
     ],

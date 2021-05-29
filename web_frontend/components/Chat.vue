@@ -1,11 +1,6 @@
 <template>
   <v-main>
     <v-toolbar id="info-bar" ref="infoBar" flat>
-      <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
-        <v-avatar class="mr-2" size="40" elevation="10">
-          <v-img :src="context.userImage" />
-        </v-avatar>
-      </v-badge>
       <v-toolbar-title class="ma-2" v-if="showUsersCount % 2 == 0">
         {{ context.title }}
       </v-toolbar-title>
@@ -104,18 +99,6 @@
               </v-list-item-content>
             </v-list-item>
           </v-card>
-          <v-badge
-            bordered
-            bottom
-            color="green"
-            dot
-            offset-x="10"
-            offset-y="10"
-          >
-            <v-avatar class="mt-n5" size="30" elevation="10">
-              <v-img src="https://cdn.vuetifyjs.com/images/lists/5.jpg" />
-            </v-avatar>
-          </v-badge>
         </v-app-bar>
         <v-app-bar
           v-else
@@ -123,11 +106,6 @@
           flat
           :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
         >
-          <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
-            <v-avatar class="mt-n5 mr-2" size="30" elevation="10">
-              <v-img :src="context.userImage" />
-            </v-avatar>
-          </v-badge>
           <v-card class="mt-10" max-width="350px" color="accent">
             <v-list-item three-line>
               <v-list-item-content class="white--text">

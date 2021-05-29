@@ -1,6 +1,9 @@
 export default {
   username: 'Никнейм',
   password: 'Пароль',
+  error404: 'Страница не найдена',
+  toHome: 'Вернуться домой',
+  errorOccured: 'Выявлена ошибка',
   fieldRequired: 'Это поле должно быть заполнено',
   submit: 'Отправить',
   emailRequired: 'E-mail должен быть заполнен',

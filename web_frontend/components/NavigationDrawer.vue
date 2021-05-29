@@ -1,16 +1,6 @@
 <template>
   <v-navigation-drawer permanent expand-on-hover>
     <v-list>
-      <v-list-item class="px-2">
-        <v-list-item-avatar>
-          <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
-            <v-avatar class="mr-2" size="33" elevation="10">
-              <!-- <v-img src="https://randomuser.me/api/portraits/women/85.jpg" /> -->
-            </v-avatar>
-          </v-badge>
-        </v-list-item-avatar>
-      </v-list-item>
-
       <v-list-item :to="localePath('/main')">
         <v-list-item-content>
           <v-list-item-title class="title">{{ username }}</v-list-item-title>

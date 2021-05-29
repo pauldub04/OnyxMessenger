@@ -14,20 +14,6 @@
           <v-list-item-group v-model="selectedItem">
             <div v-for="(contact, index) in contacts" :key="index">
               <v-list-item class="ma-2" link flat>
-                <v-list-item-avatar>
-                  <v-badge
-                    bordered
-                    bottom
-                    color="green"
-                    dot
-                    offset-x="16"
-                    offset-y="9"
-                  >
-                    <v-avatar class="mr-2" size="30" elevation="10">
-                      <v-img :src="contact.userImage" />
-                    </v-avatar>
-                  </v-badge>
-                </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{ contact.title }}</v-list-item-title>
                   <v-list-item-subtitle>
@@ -46,11 +32,6 @@
                   :value="countUnreadMessages(contact.meunreadMessagesssages)
                  -->
                 <v-list-item-action>
-                  <v-badge
-                    overlap
-                    :content="contact.unreadMessages"
-                    :value="contact.unreadMessages"
-                  ></v-badge>
                   <v-list-item-action-text>{{
                     contact.lastMessage.date
                   }}</v-list-item-action-text>
