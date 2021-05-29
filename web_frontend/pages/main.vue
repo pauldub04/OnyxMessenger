@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-overlay :value="overlay" opacity="1">
+    <v-overlay :value="overlay">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </v-overlay>
 
@@ -17,12 +17,12 @@
                 <v-list-item-content>
                   <v-list-item-title>{{ contact.title }}</v-list-item-title>
                   <v-list-item-subtitle>
-                    <span class="font-weight-bold info--text"
+                    <!-- <span class="font-weight-bold info--text"
                       >{{
                         contact.messages[contact.messages.length - 1].user
                           .username
                       }}:</span
-                    >
+                    > -->
 
                     {{ contact.lastMessage }}
                   </v-list-item-subtitle>
@@ -45,14 +45,14 @@
           </v-list-item-group>
         </v-list>
         <v-col v-if="contacts.length == 0">
-          <div>У вас нет чатов, cоздайте первый</div>
+          <div class="ml-1">У вас нет чатов, cоздайте первый</div>
+          <v-btn class="mt-5" to="/create-chat">Создать чат</v-btn>
         </v-col>
-        <v-col>
-          <v-btn class="mt-2" @click="createChat">Создать чат</v-btn>
+        <!-- <v-col>
           <v-btn depressed icon class="mt-2 ml-2" @click="getChats">
             <v-icon> mdi-refresh </v-icon>
           </v-btn>
-        </v-col>
+        </v-col> -->
       </v-col>
       <v-divider vertical></v-divider>
       <v-col>
@@ -76,111 +76,7 @@ export default {
   data: () => ({
     selectedItem: -1,
     height: 0,
-    contacts: [
-      // {
-      //   username: 'Том Хэнкс',
-      //   userImage:
-      //     'http://t0.gstatic.com/images?q=tbn:ANd9GcSn0EqWZ7hDt3u_M2f1KDPSdjUCLg7HCDArVAGpguedO6IlH0uIhsmh5iORmeXH',
-      //   messages: [
-      //     {
-      //       sender_id: 1,
-      //       text:
-      //         'Люди всегда думают, что в любом человеке есть плохие стороны, скелеты в шкафу, демоны под кроватью. Но, правда в том, что вы никогда не узнаете всей правды обо мне, как и я о вас.',
-      //       date: '13.02.2021',
-      //       read: true,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Джонни Депп',
-      //   userImage:
-      //     'http://t2.gstatic.com/images?q=tbn:ANd9GcQRmj9gO7hiNSpI6D7-3UE5ejpqfRdocu1jEEB-HIkBivMZz0GJ1-1-3mBR5Ept',
-      //   messages: [
-      //     {
-      //       sender_id: 2,
-      //       text: 'Найти себя невозможно, себя можно только создать.',
-      //       date: '26.02.2021',
-      //       read: false,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Анджелина Джоли',
-      //   userImage:
-      //     'http://t2.gstatic.com/images?q=tbn:ANd9GcSlL8b-tw_kcXiljP05etQIjGWQb2pHZI1Xr2kbmRPOUc7MT66GGqhHMafG0kYy',
-      //   messages: [
-      //     {
-      //       sender_id: 3,
-      //       text:
-      //         'Жизнь ничего не значит, если вы не делаете для других ничего полезного',
-      //       date: '15.02.2021',
-      //       read: true,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Уилл Смит',
-      //   userImage:
-      //     'http://t2.gstatic.com/images?q=tbn:ANd9GcSY2pGlF9O0Q9ByWyUv9eAzq_UdG9vcQQCuEbNS9O-akN10LbFez2L7D3b8HQVV',
-      //   messages: [
-      //     {
-      //       sender_id: 4,
-      //       text:
-      //         'Нет худшей боли, чем та, которую испытывает человек, не достигший желаемого по причине собственной лени.',
-      //       date: '23.02.2021',
-      //       read: false,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Том Круз',
-      //   userImage:
-      //     'http://t1.gstatic.com/images?q=tbn:ANd9GcQV_eaB5WWobnYmnlKttxteK131L9_60iKVtQMW6PXxls0nN5G5lYtRjAW7xgrv',
-      //   messages: [
-      //     {
-      //       sender_id: 5,
-      //       text: 'Я люблю влюбляться.',
-      //       date: '18.02.2021',
-      //       read: true,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Леонардо Ди Каприо',
-      //   userImage:
-      //     'http://t2.gstatic.com/images?q=tbn:ANd9GcQTZE6ZxVumFL3ga6AiETDuiRobav4wFmLjcBf9D1D85Q_B2zk5wlNlw-UrcI4f',
-      //   messages: [
-      //     {
-      //       sender_id: 6,
-      //       text:
-      //         'Важно помнить: всякий раз, когда ты покупаешь что-то, ты на сто процентов поддерживаешь политику той компании, которая произвела эту вещь.',
-      //       date: '18.02.2021',
-      //       read: false,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-      // {
-      //   username: 'Мерил Стрип',
-      //   userImage:
-      //     'http://t0.gstatic.com/images?q=tbn:ANd9GcTlsdVtP4knLY_9DzdgKnH1tenKDPwWplRd4x-L5A5pBy228qidSgF2MAPPF0O_',
-      //   messages: [
-      //     {
-      //       sender_id: 6,
-      //       text:
-      //         'Зависть — прекрасный стимул для развития творческого потенциала, которого не хватает на что-то дельное.',
-      //       date: '20.09.2019',
-      //       read: false,
-      //     },
-      //   ],
-      //   uri: null,
-      // },
-    ],
+    contacts: [],
     overlay: true,
   }),
   beforeCreate() {
@@ -190,6 +86,7 @@ export default {
   mounted() {
     // this.$store.dispatch('fetchUser')
     // console.log(this.$store.getters.getToken)
+    this.$store.dispatch('setTheme', this.$i18n)
     this.getChats()
 
     this.$nextTick(function () {
@@ -215,13 +112,11 @@ export default {
       return counter
     },
     createChat() {
-      console.log('sg')
       this.$axios
         .post('http://localhost:8000/api/chats/')
         .then((response) => {
           console.log(response.data)
           this.getChats()
-          // this.selectedItem = this.contacts.length - 1
         })
         .catch((error) => {
           console.log(error)

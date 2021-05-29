@@ -70,8 +70,12 @@ export default {
         placeholderOne: 'Enter username',
         placeholderTwo: 'Enter usernames',
       },
+      stepThree: {
+        titleRules: 'Enter title',
+      },
       continue: 'Continue',
       createChat: 'Create Chat',
+      chatName: 'Chat title',
       cancel: 'Cancel',
     },
   },

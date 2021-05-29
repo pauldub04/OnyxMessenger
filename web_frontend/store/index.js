@@ -1,3 +1,5 @@
+import colors from 'vuetify/es5/util/colors'
+
 /* eslint-disable */
 export const state = () => ({
   user: {
@@ -112,8 +114,48 @@ export const actions = {
     if (ctx.state.token !== null && ctx.state.token !== '') {
       this.$router.push('/main')
     }
-  }
+  },
+  setTheme(ctx, i18n) {
+    window.$nuxt.$root.$vuetify.theme.dark = JSON.parse(localStorage.getItem('dark_theme')) || 0;
 
+    const default_theme = {
+      name: 'Base Theme',
+      dark: {
+        primary: colors.blue.darken2,
+        accent: colors.grey.darken3,
+        secondary: colors.amber.darken3,
+        info: colors.teal.lighten1,
+        warning: colors.amber.base,
+        error: colors.deepOrange.accent4,
+        success: colors.green.accent3,
+      },
+      light: {
+        primary: colors.blue.darken2,
+        accent: colors.grey.darken3,
+        secondary: colors.amber.darken3,
+        info: colors.teal.lighten1,
+        warning: colors.amber.base,
+        error: colors.deepOrange.accent4,
+        success: colors.green.accent3,
+      },
+    }
+    const theme = JSON.parse(localStorage.getItem('theme')) || default_theme;
+    const name = theme.name
+    const dark = theme.dark
+    const light = theme.light
+    // set themes
+    Object.keys(dark).forEach((i) => {
+      window.$nuxt.$root.$vuetify.theme.themes.dark[i] = dark[i]
+    })
+    Object.keys(light).forEach((i) => {
+      window.$nuxt.$root.$vuetify.theme.themes.light[i] = light[i]
+    })
+    // also save theme name to disable selection
+    window.$nuxt.$root.$vuetify.theme.themes.name = name
+
+    const locale = JSON.parse(localStorage.getItem('locale'))
+    i18n.setLocale(locale)
+  }
 }
 
 export const getters = {

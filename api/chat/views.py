@@ -21,9 +21,25 @@ class ChatSessionView(APIView):
 
     def post(self, request, *args, **kwargs):
         """create a new chat session."""
+        global new_u
         user = request.user
 
-        chat_session = ChatSession.objects.create(owner=user)
+        chat_type = request.data['type']
+        users = list(request.data['users'])
+        title = request.data['title']
+
+        chat_session = ChatSession.objects.create(owner=user, title=title, type=(chat_type-1))
+
+        print(chat_type, users, title)
+        for u in users:
+            try:
+                new_u = User.objects.get(username=u)
+            except:
+                pass
+            chat_session.members.get_or_create(
+                user=new_u,
+                chat_session=chat_session,
+            )
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri,
@@ -43,28 +59,9 @@ class ChatSessionView(APIView):
                 chat_sessions.append(c)
 
         sessions = []
-        i = 0
         for c in chat_sessions:
             messages = [chat_session_message.to_json() for chat_session_message in c.messages.all()]
-            # if len(messages) == 0:
-            #     messages = [{'user': {'id': -1, 'username': '', 'email': '', 'first_name': '', 'last_name': ''},
-            #                  'message': 'No messages yet'}]
-
-            i += 1
-            owner = c.owner
-            members = [c.user for c in c.members.all()]
-
-            if len(members) == 0:
-                title = f'Chat {i}'
-            elif len(members) == 1:
-                if members[0] == user:
-                    title = f'{owner.username}'
-                else:
-                    title = f'{members[0].username}'
-            else:
-                title = f'{members[0].username}, {members[1].username}'
-                if len(members) > 2:
-                    title += '...'
+            members = [c.user.username for c in c.members.all()]
 
             sessions.append({
                 'uri': c.uri,
@@ -73,7 +70,8 @@ class ChatSessionView(APIView):
                 'lastMessage': messages[-1]['message'] if len(messages) > 0 else 'No messages yet',
                 'unreadMessages': 0,
                 'messages': messages,
-                'title': title,
+                'title': c.title,
+                'members': members
             })
 
         return Response({
