@@ -72,6 +72,9 @@ export default {
         placeholderTwo: 'Enter usernames',
       },
       stepThree: {
+        stepLabel: 'Choose image',
+      },
+      stepFour: {
         titleRules: 'Enter title',
       },
       continue: 'Continue',

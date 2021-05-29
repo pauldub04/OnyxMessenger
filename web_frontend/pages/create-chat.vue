@@ -63,6 +63,21 @@
                 :label="$t('pages.createChat.stepTwo.placeholderTwo')"
               ></v-autocomplete>
             </v-container>
+
+            <v-btn color="primary" @click="stepper = 3">
+              {{ $t('pages.createChat.continue') }}
+            </v-btn>
+            <v-btn text @click="stepper = 1">
+              {{ $t('pages.createChat.cancel') }}
+            </v-btn>
+          </v-stepper-content>
+
+          <v-stepper-step :complete="stepper > 3" step="3">
+            {{ $t('pages.createChat.stepThree.stepLabel') }}
+          </v-stepper-step>
+          <v-stepper-content step="3">
+            <v-file-input v-model="file"></v-file-input>
+
             <v-btn
               v-if="newChatType == 1"
               color="primary"
@@ -71,25 +86,25 @@
             >
               {{ $t('pages.createChat.createChat') }}
             </v-btn>
-            <v-btn v-else color="primary" @click="stepper = 3">
+            <v-btn v-else color="primary" @click="stepper = 4">
               {{ $t('pages.createChat.continue') }}
             </v-btn>
-            <v-btn text @click="stepper = 1">
+            <v-btn text @click="stepper = 2">
               {{ $t('pages.createChat.cancel') }}
             </v-btn>
           </v-stepper-content>
 
           <div v-if="newChatType == 2">
-            <v-stepper-step :complete="stepper > 3" step="3">
+            <v-stepper-step :complete="stepper > 4" step="4">
               {{ $t('pages.createChat.chatName') }}
             </v-stepper-step>
-            <v-stepper-content step="3">
+            <v-stepper-content step="4">
               <v-form v-model="valid">
                 <v-text-field
                   v-model="chatName"
                   :label="$t('pages.createChat.createChat')"
                   :rules="[
-                    (v) => !!v || $t('pages.createChat.stepThree.titleRules'),
+                    (v) => !!v || $t('pages.createChat.stepFour.titleRules'),
                   ]"
                   required
                   clearable
@@ -132,6 +147,7 @@ export default {
     ],
 
     valid: false,
+    file: null,
   }),
   created() {
     this.getUsers()
@@ -148,16 +164,15 @@ export default {
         this.inviteUserName = []
         this.inviteUserName.push(tmp)
       }
-      console.log(this.newChatType)
-      console.log(this.inviteUserName)
-      console.log(this.chatName)
+
+      const formData = new FormData()
+      formData.append('image', this.file)
+      formData.append('title', this.chatName)
+      formData.append('type', this.newChatType)
+      formData.append('users', this.inviteUserName)
 
       this.$axios
-        .post('http://localhost:8000/api/chats/', {
-          type: this.newChatType,
-          users: this.inviteUserName,
-          title: this.chatName,
-        })
+        .post('http://localhost:8000/api/chats/', formData)
         .then((response) => {
           console.log(response.data)
           this.$router.push('/main')

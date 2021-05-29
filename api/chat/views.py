@@ -30,18 +30,18 @@ class ChatSessionView(APIView):
         title = request.data['title']
         image = request.data['image']
 
-        chat_session = ChatSession.objects.create(owner=user, title=title, type=(chat_type-1), image=image)
+        chat_session = ChatSession.objects.create(owner=user, title=title, type=(chat_type - 1), image=image)
 
         print(chat_type, users, title)
         for u in users:
             try:
                 new_u = User.objects.get(username=u)
+                chat_session.members.get_or_create(
+                    user=new_u,
+                    chat_session=chat_session,
+                )
             except:
                 pass
-            chat_session.members.get_or_create(
-                user=new_u,
-                chat_session=chat_session,
-            )
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri,
@@ -65,6 +65,8 @@ class ChatSessionView(APIView):
             messages = [chat_session_message.to_json() for chat_session_message in c.messages.all()]
             members = [c.user.username for c in c.members.all()]
 
+            # print(str(c.image))
+            # print(c.image is None)
             sessions.append({
                 'uri': c.uri,
                 'username': '',
@@ -73,7 +75,8 @@ class ChatSessionView(APIView):
                 'unreadMessages': 0,
                 'messages': messages,
                 'title': c.title,
-                'members': members
+                'members': members,
+                'image': str(c.image)
             })
 
         return Response({
@@ -204,4 +207,3 @@ class ChatSessionMessageView(APIView):
             'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
             'user': deserialize_user(user)
         })
-

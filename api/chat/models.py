@@ -42,7 +42,7 @@ class ChatSession(TrackableDateModel):
     uri = models.URLField(default=_generate_unique_uri)
     title = models.TextField()
     type = models.BooleanField()
-    image = models.ImageField(upload_to='images/', blank=True)
+    image = models.ImageField(upload_to='images/', default='images/default.png')
 
 
 class ChatSessionMessage(TrackableDateModel):

@@ -72,6 +72,9 @@ export default {
         placeholderTwo: 'Введите никнеймы',
       },
       stepThree: {
+        stepLabel: 'Выберите изображение',
+      },
+      stepFour: {
         titleRules: 'Введите название',
       },
       continue: 'Продолжить',

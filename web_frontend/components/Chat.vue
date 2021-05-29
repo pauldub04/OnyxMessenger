@@ -1,11 +1,19 @@
 <template>
   <v-main>
     <v-toolbar id="info-bar" ref="infoBar" flat>
-      <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
+      <!-- <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
         <v-avatar class="mr-2" size="40" elevation="10">
-          <v-img :src="context.userImage" />
+          <v-img :src="'http://localhost:8000/media/' + context.image" />
         </v-avatar>
-      </v-badge>
+      </v-badge> -->
+      <v-avatar
+        class="mr-2"
+        size="40"
+        elevation="10"
+        v-if="context.image !== 'null'"
+      >
+        <v-img :src="'http://localhost:8000/media/' + context.image" />
+      </v-avatar>
       <v-row @click="printUsers">
         <v-toolbar-title v-if="showUsersCount % 2 == 0" class="ma-2 ml-5">
           {{ context.title }}
@@ -230,11 +238,16 @@ export default {
     users: [],
   }),
   watch: {},
+  computed: {
+    chatImage() {
+      return 'http://localhost:8000/media/' + this.context.image
+    }
+  },
   created() {
     // setInterval(this.getMessages, 3000)
   },
   mounted() {
-    console.log(this.context.members)
+    console.log('kj', 'http://localhost:8000/media/' + this.context.image)
     this.$store.dispatch('setTheme', this.$i18n)
     this.getUsers()
     this.getMessages()
