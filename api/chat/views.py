@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import (
     ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user, User
 )
+from rest_framework import viewsets
 
 from .consumers import ChatConsumer
 from channels.layers import get_channel_layer
@@ -24,11 +25,12 @@ class ChatSessionView(APIView):
         global new_u
         user = request.user
 
-        chat_type = request.data['type']
+        chat_type = int(request.data['type'])
         users = list(request.data['users'])
         title = request.data['title']
+        image = request.data['image']
 
-        chat_session = ChatSession.objects.create(owner=user, title=title, type=(chat_type-1))
+        chat_session = ChatSession.objects.create(owner=user, title=title, type=(chat_type-1), image=image)
 
         print(chat_type, users, title)
         for u in users:
@@ -202,3 +204,4 @@ class ChatSessionMessageView(APIView):
             'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
             'user': deserialize_user(user)
         })
+
