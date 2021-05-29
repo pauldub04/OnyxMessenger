@@ -6,6 +6,7 @@ export default {
   errorOccured: 'An error occured',
   fieldRequired: 'This field is required',
   submit: 'Submit',
+  close: 'Close',
   emailRequired: 'E-mail is required',
   emailNotValid: 'E-mail must be valid',
   passwordMin: 'Minimum 8 characters',

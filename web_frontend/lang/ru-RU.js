@@ -6,6 +6,7 @@ export default {
   errorOccured: 'Выявлена ошибка',
   fieldRequired: 'Это поле должно быть заполнено',
   submit: 'Отправить',
+  close: 'Закрыть',
   emailRequired: 'E-mail должен быть заполнен',
   emailNotValid: 'E-mail доолжен быть валидным',
   passwordMin: 'Минимум 8 символов',

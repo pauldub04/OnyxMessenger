@@ -25,6 +25,7 @@
               </v-radio-group>
             </v-card>
             <v-btn
+              class="mt-2"
               :disabled="newChatType === null"
               color="primary"
               @click="stepper = 2"
@@ -41,8 +42,8 @@
           <v-stepper-content step="2">
             <v-container v-if="newChatType === 1">
               <v-autocomplete
-                :items="users"
                 v-model="inviteUserName"
+                :items="users"
                 class="mt-4 mr-5"
                 :placeholder="$t('pages.createChat.stepTwo.placeholderOne')"
                 clearable
@@ -51,8 +52,8 @@
             </v-container>
             <v-container v-else>
               <v-autocomplete
-                :items="users"
                 v-model="inviteUserName"
+                :items="users"
                 chips
                 deletable-chips
                 multiple
@@ -63,14 +64,14 @@
               ></v-autocomplete>
             </v-container>
             <v-btn
-              color="primary"
-              @click="createChat"
               v-if="newChatType == 1"
+              color="primary"
               :disabled="inviteUserName === null"
+              @click="createChat"
             >
               {{ $t('pages.createChat.createChat') }}
             </v-btn>
-            <v-btn color="primary" @click="stepper = 3" v-else>
+            <v-btn v-else color="primary" @click="stepper = 3">
               {{ $t('pages.createChat.continue') }}
             </v-btn>
             <v-btn text @click="stepper = 1">
@@ -85,15 +86,15 @@
             <v-stepper-content step="3">
               <v-form v-model="valid">
                 <v-text-field
-                  :label="$t('pages.createChat.createChat')"
                   v-model="chatName"
+                  :label="$t('pages.createChat.createChat')"
                   :rules="[
                     (v) => !!v || $t('pages.createChat.stepThree.titleRules'),
                   ]"
                   required
                   clearable
                 ></v-text-field>
-                <v-btn color="primary" @click="createChat" :disabled="!valid">
+                <v-btn color="primary" :disabled="!valid" @click="createChat">
                   {{ $t('pages.createChat.createChat') }}
                 </v-btn>
                 <v-btn text @click="stepper = 1">

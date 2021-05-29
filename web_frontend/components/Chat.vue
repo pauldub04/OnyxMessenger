@@ -7,12 +7,12 @@
         </v-avatar>
       </v-badge>
       <v-row @click="printUsers">
-        <v-toolbar-title class="ma-2 ml-5" v-if="showUsersCount % 2 == 0">
+        <v-toolbar-title v-if="showUsersCount % 2 == 0" class="ma-2 ml-5">
           {{ context.title }}
         </v-toolbar-title>
         <v-dialog v-model="showSettings" width="500">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon small v-bind="attrs" v-on="on" class="mt-2 ml-2">
+            <v-btn icon small v-bind="attrs" class="mt-2 ml-2" v-on="on">
               <v-icon> mdi-account </v-icon>
             </v-btn>
           </template>
@@ -20,7 +20,7 @@
           <v-card>
             <v-card-title class="headline"> {{ context.title }} </v-card-title>
 
-            <v-card-text v-for="(m, i) in context.members" v-bind:key="i">
+            <v-card-text v-for="(m, i) in context.members" :key="i">
               {{ m }}
             </v-card-text>
 
@@ -29,7 +29,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="showSettings = false">
-                Закрыть
+                {{ $t('close') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -38,18 +38,17 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-autocomplete
+          v-if="inviteCount % 2 == 1"
+          v-model="inviteUserName"
           chips
           deletable-chips
           multiple
           :items="users"
-          v-if="inviteCount % 2 == 1"
-          v-model="inviteUserName"
           class="mt-4 mr-5"
-          placeholder="Введите username"
           clearable
           append-outer-icon="mdi-send"
+          :label="$t('pages.createChat.stepTwo.placeholderTwo')"
           @click:append-outer="invite"
-          label="Добавить пользователя"
         ></v-autocomplete>
         <v-btn icon fab small @click="toInvite"
           ><v-icon>{{ icons.accountPlus }}</v-icon>
@@ -143,7 +142,7 @@
     </v-overlay>
     <v-app-bar id="input-form" ref="inputForm" color="rgba(0,0,0,0)" flat>
       <upload-btn
-        noTitleUpdate
+        no-title-update
         class="pa-0"
         multiple
         hover
@@ -152,7 +151,7 @@
         round
         small
         depressed
-        maxWidth="15"
+        max-width="15"
         @file-update="updateFile"
       >
         <template slot="icon">
