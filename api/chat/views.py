@@ -1,4 +1,5 @@
 """Views for the chat app."""
+import json
 
 from django.contrib.auth import get_user_model
 from .models import (
@@ -26,7 +27,7 @@ class ChatSessionView(APIView):
         user = request.user
 
         chat_type = int(request.data['type'])
-        users = list(request.data['users'])
+        users = json.loads(request.data['users'])
         title = request.data['title']
         image = request.data['image']
 
@@ -34,14 +35,16 @@ class ChatSessionView(APIView):
 
         print(chat_type, users, title)
         for u in users:
-            try:
-                new_u = User.objects.get(username=u)
+            find = list(User.objects.filter(username=u))
+            if find:
+                new_u = find[0]
+                print('c', new_u)
                 chat_session.members.get_or_create(
                     user=new_u,
                     chat_session=chat_session,
                 )
-            except:
-                pass
+            else:
+                print('no user with username', u)
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri,
@@ -57,8 +60,10 @@ class ChatSessionView(APIView):
         chat_sessions_all = list(ChatSession.objects.all())
 
         for c in chat_sessions_all:
+            # print([c.user for c in c.members.all()])
             if user in [c.user for c in c.members.all()] or c.owner == user:
                 chat_sessions.append(c)
+        # print(chat_sessions)
 
         sessions = []
         for c in chat_sessions:

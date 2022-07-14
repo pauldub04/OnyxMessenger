@@ -349,8 +349,9 @@ export default {
       this.$axios
         .get(`http://127.0.0.1:8000/api/users/all/`)
         .then((response) => {
-          this.users = response.data.users
-          console.log(response.data.users)
+          this.users = response.data.users.filter(
+            (u) => u !== this.$store.getters.getUser.username
+          )
         })
         .catch((error) => {
           console.log(error)
