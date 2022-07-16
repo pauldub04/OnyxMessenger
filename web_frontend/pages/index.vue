@@ -162,8 +162,12 @@ export default {
   beforeCreate() {
     this.$store.dispatch('middlewareAuthSign')
   },
-  mounted() {
+  updated() {
+    console.log('set theme')
     this.$store.dispatch('setTheme', this.$i18n)
+  },
+  mounted() {
+    //
   },
   methods: {
     setHeight() {

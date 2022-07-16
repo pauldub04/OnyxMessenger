@@ -149,11 +149,17 @@ export default {
     valid: false,
     file: null,
   }),
-  created() {
-    this.getUsers()
+  beforeCreate() {
+    this.$store.dispatch('middlewareAuthMain')
+    this.$store.dispatch('setAuthHeader', this.$store.getters.getToken)
+    console.log('set token', this.$store.getters.getToken)
+  },
+  updated() {
+    console.log('set theme')
+    this.$store.dispatch('setTheme', this.$i18n)
   },
   mounted() {
-    this.$store.dispatch('setTheme', this.$i18n)
+    this.getUsers()
   },
   methods: {
     createChat() {
@@ -181,6 +187,7 @@ export default {
         })
     },
     getUsers() {
+      console.log('getUsers')
       this.$axios
         .get(`http://127.0.0.1:8000/api/users/all/`)
         .then((response) => {

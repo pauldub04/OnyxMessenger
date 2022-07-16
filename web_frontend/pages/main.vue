@@ -82,11 +82,15 @@ export default {
   beforeCreate() {
     this.$store.dispatch('middlewareAuthMain')
     this.$store.dispatch('setAuthHeader', this.$store.getters.getToken)
+    console.log('set token', this.$store.getters.getToken)
+  },
+  updated() {
+    console.log('set theme')
+    this.$store.dispatch('setTheme', this.$i18n)
   },
   mounted() {
     // this.$store.dispatch('fetchUser')
     // console.log(this.$store.getters.getToken)
-    this.$store.dispatch('setTheme', this.$i18n)
     this.getChats()
 
     this.$nextTick(function () {
@@ -123,8 +127,7 @@ export default {
         })
     },
     getChats() {
-      console.log(this.$vuetify.theme.themes.name)
-      console.log('kek2')
+      console.log('getChats')
       this.$axios
         .get('http://localhost:8000/api/chats/')
         .then((response) => {

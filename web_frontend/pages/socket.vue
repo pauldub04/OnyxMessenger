@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-text-field v-model="message" label="message"></v-text-field>
-    <div v-for="(m, i) in messages" v-bind:key="i">{{ m.message }}</div>
+    <div v-for="(m, i) in messages" :key="i">{{ m.message }}</div>
 
     <v-btn @click="send">send</v-btn>
   </v-app>

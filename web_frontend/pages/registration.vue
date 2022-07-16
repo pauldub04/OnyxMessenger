@@ -50,13 +50,13 @@
     <v-container fill-height>
       <v-card class="mx-auto" max-width="500">
         <v-card-title class="title font-weight-regular justify-space-between">
-          <span v-if="this.step === 1">{{
+          <span v-if="step === 1">{{
             $t('pages.registrationPage.setUsername.title')
           }}</span>
-          <span v-else-if="this.step === 2">{{
+          <span v-else-if="step === 2">{{
             $t('pages.registrationPage.setEmail.title')
           }}</span>
-          <span v-else-if="this.step === 3">{{
+          <span v-else-if="step === 3">{{
             $t('pages.registrationPage.setPassword.title')
           }}</span>
           <span v-else>{{ $t('pages.registrationPage.checkData.title') }}</span>
@@ -227,8 +227,12 @@ export default {
   beforeCreate() {
     this.$store.dispatch('middlewareAuthSign')
   },
-  mounted() {
+  updated() {
+    console.log('set theme')
     this.$store.dispatch('setTheme', this.$i18n)
+  },
+  mounted() {
+    //
   },
   methods: {
     signUp() {

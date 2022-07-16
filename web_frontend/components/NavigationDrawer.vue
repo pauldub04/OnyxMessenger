@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer permanent expand-on-hover>
     <v-list>
-      <v-list-item :to="localePath('/main')">
+      <v-list-item :to="localePath('/main')" inactive>
         <v-list-item-content>
           <v-list-item-title class="title">{{ username }}</v-list-item-title>
           <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
@@ -81,8 +81,14 @@
 export default {
   name: 'NavigationDrawer',
   props: {
-    username: String,
-    email: String,
+    username: {
+      type: String,
+      default: 'username',
+    },
+    email: {
+      type: String,
+      default: 'email',
+    },
   },
   data() {
     return {
@@ -95,12 +101,6 @@ export default {
         },
       ],
     }
-  },
-  methods: {
-    click() {
-      console.log('df')
-      this.$nuxt.$emit('createChat')
-    },
   },
 }
 </script>

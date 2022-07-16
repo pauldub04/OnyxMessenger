@@ -7,10 +7,10 @@
         </v-avatar>
       </v-badge> -->
       <v-avatar
+        v-if="context.image !== 'null'"
         class="mr-2"
         size="40"
         elevation="10"
-        v-if="context.image !== 'null'"
       >
         <v-img :src="'http://localhost:8000/media/' + context.image" />
       </v-avatar>

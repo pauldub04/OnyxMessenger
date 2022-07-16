@@ -116,7 +116,7 @@ export const actions = {
     }
   },
   setTheme(ctx, i18n) {
-    window.$nuxt.$root.$vuetify.theme.dark = JSON.parse(localStorage.getItem('dark_theme')) || 0;
+    $nuxt.$root.$vuetify.theme.dark = JSON.parse(localStorage.getItem('dark_theme')) || 0;
 
     const default_theme = {
       name: 'Base Theme',
@@ -145,13 +145,13 @@ export const actions = {
     const light = theme.light
     // set themes
     Object.keys(dark).forEach((i) => {
-      window.$nuxt.$root.$vuetify.theme.themes.dark[i] = dark[i]
+      $nuxt.$root.$vuetify.theme.themes.dark[i] = dark[i]
     })
     Object.keys(light).forEach((i) => {
-      window.$nuxt.$root.$vuetify.theme.themes.light[i] = light[i]
+      $nuxt.$root.$vuetify.theme.themes.light[i] = light[i]
     })
     // also save theme name to disable selection
-    window.$nuxt.$root.$vuetify.theme.themes.name = name
+    $nuxt.$root.$vuetify.theme.themes.name = name
 
     const locale = JSON.parse(localStorage.getItem('locale'))
     i18n.setLocale(locale)
