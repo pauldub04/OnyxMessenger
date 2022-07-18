@@ -55,7 +55,7 @@ export default {
     settings: {
       label: 'Настройки',
       apperance: 'Визуальное оформление',
-      colorDarkMode: 'Темная тема и цветовое оформление',
+      colorDarkMode: 'Темная тема',
       changeColorButton: 'Изменить цветовое оформление',
       changeLanguage: 'Изменить язык',
     },

@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <!-- <v-list-item>
     <v-list-item-content>
@@ -13,134 +14,104 @@
       :username="$store.state.user.username"
       :email="$store.state.user.email"
     ></NavigationDrawer>
-    <v-col>
-      <v-container fill-height>
-        <v-card class="mx-auto" max-width="606">
-          <v-card-title
-            ><h2>{{ $t('pages.settings.label') }}</h2></v-card-title
-          >
 
-          <v-list subheader three-line>
-            <v-subheader>{{ $t('pages.settings.apperance') }}</v-subheader>
+    <v-container fill-height>
+      <v-card class="mx-auto" width="606">
+        <v-card-title large>
+          {{ $t('pages.settings.label') }}
+        </v-card-title>
+        <v-card-subtitle>{{ $t('pages.settings.apperance') }}</v-card-subtitle>
 
-            <v-list-item>
+      <v-list>
+        <v-list-item @click="isDark = !isDark">
+          <v-row class="py-2">
+            <v-col class="mt-2">
+              {{ $t('pages.settings.colorDarkMode') }}
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-switch readonly class="mr-2" v-model="isDark"></v-switch>
+          </v-row>
+        </v-list-item>
+
+        <v-divider light class="mx-4 mt-2"></v-divider>
+
+        <v-list>
+          <v-list-group>
+            <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title
-                  ><h3>
-                    {{ $t('pages.settings.colorDarkMode') }}
-                  </h3></v-list-item-title
-                >
-                <v-col>
-                  <v-row justify="start">
-                    <v-switch v-model="isDark" class="mt-2 ml-4"></v-switch>
-                  </v-row>
-                  <v-row justify="start"
-                    ><v-menu
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :nudge-width="200"
-                      offset-y
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-btn text v-on="on">
-                          {{ $t('pages.settings.changeColorButton') }}
-                        </v-btn>
-                      </template>
-                      <v-card
-                        v-for="(theme, index) in themes"
-                        :key="index"
-                        class="my-2"
-                        :disabled="$vuetify.theme.themes.name === theme.name"
-                        hover
-                        outlined
-                        @click="setTheme(theme)"
-                      >
-                        <v-list-item>
-                          <v-list-item-content>
-                            <v-list-item-title class="font-weight-bold">
-                              {{ theme.name }}</v-list-item-title
-                            >
-                          </v-list-item-content>
-                          <v-list-item-action>
-                            <v-avatar
-                              v-if="$vuetify.theme.themes.name === theme.name"
-                              color="success"
-                              size="30"
-                            >
-                              <v-icon>mdi-check</v-icon>
-                            </v-avatar>
-                          </v-list-item-action>
-                        </v-list-item>
-                        <div class="my-2">
-                          <v-chip
-                            v-for="(key, index2) in Object.keys(theme.dark)"
-                            :key="index2"
-                            class="mx-1"
-                            label
-                            :color="theme.dark[key]"
-                          >
-                            {{ key }}</v-chip
-                          >
-                        </div>
-                        <div class="my-2">
-                          <v-chip
-                            v-for="(key, index2) in Object.keys(theme.light)"
-                            :key="index2"
-                            class="mx-1"
-                            label
-                            :color="theme.light[key]"
-                          >
-                            {{ key }}</v-chip
-                          >
-                        </div>
-                      </v-card>
-                    </v-menu>
-                  </v-row>
-                </v-col>
-                <v-list-item-title
-                  ><h3>
-                    {{ $t('pages.settings.changeLanguage') }}
-                  </h3></v-list-item-title
-                >
-                <v-menu
-                  v-model="menuLang"
-                  :close-on-content-click="false"
-                  :nudge-width="50"
-                  offset-y
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on">
-                      <v-list-item>
-                        <v-list-item-content>{{
-                          $i18n.locale === 'en' ? 'English' : 'Русский'
-                        }}</v-list-item-content>
-                      </v-list-item>
-                    </v-btn>
-                  </template>
+                <v-list-item-title class="py-2">{{ $t('pages.settings.changeColorButton') }}</v-list-item-title>
+              </v-list-item-content>
+            </template>
 
-                  <v-list>
-                    <v-list-item
-                      v-for="locale in availableLocales"
-                      :key="locale.code"
-                      link
-                      hover
-                      @click="setLocale(locale.code)"
-                    >
-                      <v-list-item-avatar
-                        ><v-img :src="locale.flagSrc"></v-img
-                      ></v-list-item-avatar>
-                      <v-list-item-content>{{
-                        locale.name
-                      }}</v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
+            <v-list-item
+              v-for="(theme, index) in themes"
+              :key="index"
+              @click="setTheme(theme)"
+              :disabled="selectedThemeName === theme.name"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ theme.name }}</v-list-item-title>
+
+                <v-chip-group>
+                  <v-chip
+                    v-for="(key, index2) in Object.keys(theme.dark)"
+                    :key="index2"
+                    class="mx-1"
+                    label
+                    :color="theme.dark[key]"
+                  >
+                    {{ key }}
+                  </v-chip>
+                </v-chip-group>
+                <v-chip-group>
+                  <v-chip
+                    v-for="(key, index2) in Object.keys(theme.light)"
+                    :key="index2"
+                    class="mx-1"
+                    label
+                    :color="theme.light[key]"
+                  >
+                    {{ key }}
+                  </v-chip>
+                </v-chip-group>
               </v-list-item-content>
             </v-list-item>
-          </v-list>
-        </v-card>
-      </v-container>
-    </v-col>
+
+          </v-list-group>
+        </v-list>
+
+        <v-divider light class="mx-4"></v-divider>
+
+        <v-list-item class="my-2">
+          <v-list-item-title>
+            {{ $t('pages.settings.changeLanguage') }}
+          </v-list-item-title>
+          <v-menu
+            v-model="menuLang"
+            offset-y
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn plain tile  v-on="on">{{ $i18n.locale === 'en' ? 'English' : 'Русский' }}</v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                v-for="locale in availableLocales"
+                :key="locale.code"
+                link
+                hover
+                @click="setLocale(locale.code)"
+              >
+                <v-img :src="locale.flagSrc" contain max-width="20" class="mr-3"></v-img>
+                <v-list-item-content>{{ locale.name }}</v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-list-item>
+
+      </v-list>
+      </v-card>
+    </v-container>
   </v-row>
 </template>
 
@@ -221,6 +192,7 @@ export default {
       },
     ],
     isDark: false,
+    selectedThemeName: 'Base Theme',
   }),
   computed: {
     availableLocales() {
@@ -236,15 +208,20 @@ export default {
   updated() {
     console.log('set theme')
     this.$store.dispatch('setTheme', this.$i18n)
+    this.selectedThemeName = this.$vuetify.theme.themes.name
   },
   mounted() {
     this.isDark = JSON.parse(localStorage.getItem('dark_theme')) || 0
+    this.selectedThemeName = this.$vuetify.theme.themes.name
+
+    console.log(this.availableLocales)
   },
   methods: {
     setTheme(theme) {
       localStorage.setItem('theme', JSON.stringify(theme))
       this.$store.dispatch('setTheme', this.$i18n)
       this.menu = false
+      this.selectedThemeName = theme.name
     },
     setLocale(code) {
       localStorage.setItem('locale', JSON.stringify(code))

@@ -55,7 +55,7 @@ export default {
     settings: {
       label: 'Settings',
       apperance: 'Apperance',
-      colorDarkMode: 'Dark Mode and Color Theme',
+      colorDarkMode: 'Dark Mode',
       changeColorButton: 'Change Color Theme',
       changeLanguage: 'Change language',
     },
