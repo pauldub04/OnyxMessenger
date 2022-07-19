@@ -29,11 +29,11 @@
           <v-card>
             <v-card-title class="headline"> {{ context.title }} </v-card-title>
 
-            <v-card-text v-for="(m, i) in context.members" :key="i">
-              {{ m }}
+            <v-card-text v-for="(m, i) in context.members" :key="i" class="ma-0 py-1">
+              {{ m.username }}
             </v-card-text>
 
-            <v-divider></v-divider>
+            <v-divider light class="mx-4 mt-3"></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -97,24 +97,21 @@
         >
           <v-spacer></v-spacer>
           <v-card class="mr-2" max-width="350px" color="primary" elevation="0">
-            <v-list-item>
-              <v-list-item-content class="white--text">
-                {{ message.message }}
-              </v-list-item-content>
-            </v-list-item>
+            <v-card-text class="white--text py-2">{{ message.message }}</v-card-text>
           </v-card>
         </v-row>
         
         <v-row v-else
           :class="index === context.messages.length-1 ? 'ma-0 mb-15' : 'ma-0 mb-1'"
         >
-          <v-card class="ml-2" max-width="350px" color="accent" elevation="0">
-            <v-list-item-subtitle class="mx-4 mt-3">{{ message.user.username }}</v-list-item-subtitle>
-            <v-list-item>
-              <v-list-item-content class="white--text py-0">
-                {{ message.message }}
-              </v-list-item-content>
-            </v-list-item>
+          <v-card class="ml-2 grey darken-3" max-width="350px" elevation="0">
+            <template v-if="context.members.length > 2 && displayUsernameArray[index]">
+              <v-card-text class="secondary--text font-weight-medium pb-0 pt-2">{{ message.user.username }}</v-card-text>
+              <v-card-text class="white--text pt-0 pb-2">{{ message.message }}</v-card-text>
+            </template>
+            <template v-else>
+              <v-card-text class="white--text py-2">{{ message.message }}</v-card-text>
+            </template>
           </v-card>
         </v-row>
       </v-list-item>
@@ -227,6 +224,7 @@ export default {
     inviteCount: 0,
     inviteUserName: null,
     users: [],
+    displayUsernameArray: [],
   }),
   watch: {},
   computed: {
@@ -287,9 +285,20 @@ export default {
           this.scrollToBottom(), 2000
         })
       }
+
+      if (message.message.user.id == this.$store.state.user.id) {
+        this.displayUsernameArray.push(0)
+      } else {
+        if (this.context.messages.length == 0 || 
+          message.message.user.id != this.context.messages[this.context.messages.length-1].user.id)
+          this.displayUsernameArray.push(1)
+        else
+          this.displayUsernameArray.push(0)
+      }
+
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
-      console.log(message.message)
+      console.log('FFF', message.message)
     },
     onError(event) {
       alert('An error occured:', event.data)
@@ -358,6 +367,18 @@ export default {
           this.context.members = response.data.members
           if (response.data.messages.length != 0)
             this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
+
+          this.displayUsernameArray = []
+          for (let ind in this.context.messages) {
+            if (this.context.messages[ind].user.id == this.$store.state.user.id) {
+              this.displayUsernameArray.push(0)
+              continue
+            }
+            if (ind == 0 || this.context.messages[ind].user.id != this.context.messages[ind-1].user.id)
+              this.displayUsernameArray.push(1)
+            else
+              this.displayUsernameArray.push(0)
+          }
         })
         .catch((error) => {
           console.log(error)

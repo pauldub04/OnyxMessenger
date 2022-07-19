@@ -54,6 +54,12 @@
                         </v-col>
                         <v-col class="mx-0 px-0">
                           <v-sheet
+                            :color="theme.dark.secondary"
+                            height="50"
+                          ></v-sheet>
+                        </v-col>
+                        <v-col class="mx-0 px-0">
+                          <v-sheet
                             :color="theme.dark.accent"
                             height="50"
                           ></v-sheet>
