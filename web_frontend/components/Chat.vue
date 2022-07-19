@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-main>
     <v-toolbar id="info-bar" ref="infoBar" flat>
@@ -43,6 +44,7 @@
           </v-card>
         </v-dialog>
       </v-row>
+
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-autocomplete
@@ -84,51 +86,40 @@
         </v-menu> -->
       </v-toolbar-items>
     </v-toolbar>
+
     <v-divider></v-divider>
+    
     <v-list id="messageContainer" :height="height" class="overflow-y-auto">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
-        <v-app-bar
-          v-if="message.user.id === $store.state.user.id"
-          color="rgba(0,0,0,0)"
-          flat
-          :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
+
+        <v-row v-if="message.user.id === $store.state.user.id"
+          :class="index === context.messages.length-1 ? 'ma-0 mb-15' : 'ma-0 mb-1'"
         >
           <v-spacer></v-spacer>
-          <v-card class="mt-16 mr-2" max-width="350px" color="primary">
-            <v-list-item three-line>
+          <v-card class="mr-2" max-width="350px" color="primary" elevation="0">
+            <v-list-item>
               <v-list-item-content class="white--text">
-                <div class="mb-4">
-                  <h3>{{ message.user.username }}</h3>
-                </div>
-                <div>
-                  {{ message.message }}
-                </div>
+                {{ message.message }}
               </v-list-item-content>
             </v-list-item>
           </v-card>
-        </v-app-bar>
-        <v-app-bar
-          v-else
-          color="rgba(0,0,0,0)"
-          flat
-          :class="index === context.messages.length ? 'mb-15 mt-15' : 'mb-15'"
+        </v-row>
+        
+        <v-row v-else
+          :class="index === context.messages.length-1 ? 'ma-0 mb-15' : 'ma-0 mb-1'"
         >
-          <v-card class="mt-10" max-width="350px" color="accent">
-            <v-list-item three-line>
-              <v-list-item-content class="white--text">
-                <div class="mb-4">
-                  <h3>{{ message.user.username }}</h3>
-                </div>
-                <div>
-                  {{ message.message }}
-                </div>
+          <v-card class="ml-2" max-width="350px" color="accent" elevation="0">
+            <v-list-item-subtitle class="mx-4 mt-3">{{ message.user.username }}</v-list-item-subtitle>
+            <v-list-item>
+              <v-list-item-content class="white--text py-0">
+                {{ message.message }}
               </v-list-item-content>
             </v-list-item>
           </v-card>
-        </v-app-bar>
+        </v-row>
       </v-list-item>
-      <v-btn
-        v-if="checkIsDown"
+      
+      <v-btn v-if="checkIsDown"
         large
         icon
         bottom
@@ -140,7 +131,7 @@
         <v-icon>{{ icons.down }}</v-icon>
       </v-btn>
     </v-list>
-    <v-divider></v-divider>
+
     <v-overlay v-model="overlay" :z-index="zIndex">
       <VEmojiPicker
         v-click-outside="onClickOutsideEmojiPicker"
@@ -363,12 +354,10 @@ export default {
         .then((response) => {
           console.log(response.data)
 
-          this.members = response.data.members
           this.context.messages = response.data.messages
+          this.context.members = response.data.members
           if (response.data.messages.length != 0)
-            this.context.lastMessage =
-              response.data.messages[response.data.messages.length - 1].message
-          // console.log(this.context.messages)
+            this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
         })
         .catch((error) => {
           console.log(error)
