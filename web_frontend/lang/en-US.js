@@ -15,12 +15,12 @@ export default {
       logIn: 'LOG IN',
       or: 'or',
       signUp: 'SIGN UP',
-      goToForm: 'Go To Form',
+      goToForm: 'Go to form',
     },
     registrationPage: {
       back: 'Back',
       next: 'Next',
-      signUp: 'Sign Up',
+      signUp: 'Sign up',
       setUsername: {
         title: 'Set your username',
         placeholder: 'Username',
@@ -36,7 +36,7 @@ export default {
       setPassword: {
         title: 'Set your password',
         placeholder: 'Password',
-        confirmPlaceholder: 'Confirm Password',
+        confirmPlaceholder: 'Confirm password',
         explanation: 'Use a password to verify your identity',
         hint: 'At least 8 characters',
       },
@@ -49,22 +49,24 @@ export default {
     NavigationDrawer: {
       chats: 'Chats',
       settings: 'Settings',
-      createChat: 'Create Chat',
-      logOut: 'Log Out',
+      createChat: 'Create chat',
+      logOut: 'Log out',
     },
     settings: {
       label: 'Settings',
       apperance: 'Apperance',
-      colorDarkMode: 'Dark Mode',
-      changeColorButton: 'Change Color Theme',
-      changeLanguage: 'Change language',
+      colorDarkMode: 'Dark mode',
+      changeColorButton: 'Color theme',
+      changeLanguage: 'Language',
+      themeName: 'Theme',
     },
     createChat: {
-      label: 'Create Chat',
+      label: 'Create chat',
+      newChat: 'Set up a new chat',
       stepOne: {
         stepLabel: 'Choose the type of chat:',
-        privateMessages: 'Private Messages',
-        groupChat: 'Group Chat',
+        privateMessages: 'Private messages',
+        groupChat: 'Group chat',
       },
       stepTwo: {
         stepLabel: 'Add people:',
@@ -73,12 +75,13 @@ export default {
       },
       stepThree: {
         stepLabel: 'Choose image',
+        subLabel: 'Optional',
       },
       stepFour: {
         titleRules: 'Enter title',
       },
       continue: 'Continue',
-      createChat: 'Create Chat',
+      createChat: 'Create chat',
       chatName: 'Chat title',
       cancel: 'Cancel',
     },

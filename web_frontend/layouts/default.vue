@@ -1,5 +1,7 @@
 <template>
-  <v-app class="v-application"> <Nuxt /></v-app>
+  <v-app class="v-application">
+    <Nuxt />
+  </v-app>
 </template>
 
 <script>

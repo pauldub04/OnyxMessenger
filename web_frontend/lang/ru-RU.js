@@ -56,11 +56,13 @@ export default {
       label: 'Настройки',
       apperance: 'Визуальное оформление',
       colorDarkMode: 'Темная тема',
-      changeColorButton: 'Изменить цветовое оформление',
-      changeLanguage: 'Изменить язык',
+      changeColorButton: 'Цветовое оформление',
+      changeLanguage: 'Язык',
+      themeName: 'Тема',
     },
     createChat: {
       label: 'Создать чат',
+      newChat: 'Настройте новый чат',
       stepOne: {
         stepLabel: 'Выберите тип чата:',
         privateMessages: 'Личные сообщение',
@@ -73,6 +75,7 @@ export default {
       },
       stepThree: {
         stepLabel: 'Выберите изображение',
+        subLabel: 'Необязательно',
       },
       stepFour: {
         titleRules: 'Введите название',
