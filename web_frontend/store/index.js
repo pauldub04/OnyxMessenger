@@ -40,7 +40,6 @@ export const actions = {
         alert(error.response.request.response)
       })
   },
-
   async signIn(ctx, credentials) {
     return this.$axios
         .post('http://localhost:8000/auth/token/login/', credentials)
@@ -90,12 +89,14 @@ export const actions = {
 
         ctx.commit('setUser', {})
         ctx.commit('setToken', null)
+        this.$axios.setToken(false)
         this.$router.push('/')
       })
       .catch((error) => {
         console.log(error)
         ctx.commit('setUser', {})
         ctx.commit('setToken', null)
+        this.$axios.setToken(false)
         this.$router.push('/')
       })
 

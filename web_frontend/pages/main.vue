@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <v-app>
     <v-overlay :value="overlay">
@@ -13,54 +14,44 @@
         <v-list :max-height="height" class="overflow-y-auto">
           <v-list-item-group v-model="selectedItem">
             <div v-for="(contact, index) in contacts" :key="index">
-              <v-list-item class="ma-2" link flat>
+              <v-list-item class="ma-2">
                 <v-list-item-content>
                   <v-list-item-title>{{ contact.title }}</v-list-item-title>
                   <v-list-item-subtitle>
-                    <!-- <span class="font-weight-bold info--text"
-                      >{{
-                        contact.messages[contact.messages.length - 1].user
-                          .username
-                      }}:</span
-                    > -->
-
                     {{ contact.lastMessage }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
-                <!-- 
-                  :content="countUnreadMessages(contact.unreadMessages)"
-                  :value="countUnreadMessages(contact.meunreadMessagesssages)
-                 -->
+
                 <v-list-item-action>
-                  <v-list-item-action-text>{{
-                    contact.lastMessage.date
-                  }}</v-list-item-action-text>
+                  <v-list-item-action-text>
+                    {{ contact.lastMessage.date }}
+                  </v-list-item-action-text>
                 </v-list-item-action>
+                
               </v-list-item>
               <v-divider
+                light
                 v-if="index + 1 < contacts.length"
                 :key="index"
               ></v-divider>
             </div>
           </v-list-item-group>
         </v-list>
+        
         <v-col v-if="contacts.length == 0">
           <div class="ml-1">У вас нет чатов, cоздайте первый</div>
           <v-btn class="mt-5" to="/create-chat">Создать чат</v-btn>
         </v-col>
-        <!-- <v-col>
-          <v-btn depressed icon class="mt-2 ml-2" @click="getChats">
-            <v-icon> mdi-refresh </v-icon>
-          </v-btn>
-        </v-col> -->
       </v-col>
-      <v-divider vertical></v-divider>
+      <v-divider vertical light></v-divider>
+
       <v-col>
         <Chat
-          v-if="selectedItem !== -1"
+          v-if="selectedItem !== undefined"
           :context="contacts[selectedItem]"
         ></Chat>
       </v-col>
+
     </v-row>
   </v-app>
 </template>
@@ -70,12 +61,11 @@ import { mdiAccount } from '@mdi/js'
 import NavigationDrawer from '~/components/NavigationDrawer'
 import Chat from '~/components/Chat'
 export default {
-  // middleware: 'auth', // check is user auth
+  middleware: 'auth', // check is user auth
   components: { Chat, NavigationDrawer },
   icons: { account: mdiAccount },
   data: () => ({
-    selectedItem: -1,
-    height: 0,
+    selectedItem: undefined,
     contacts: [],
     overlay: true,
   }),

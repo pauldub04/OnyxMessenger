@@ -87,7 +87,7 @@
       </v-toolbar-items>
     </v-toolbar>
 
-    <v-divider></v-divider>
+    <v-divider light></v-divider>
     
     <v-list id="messageContainer" :height="height" class="overflow-y-auto">
       <v-list-item v-for="(message, index) in context.messages" :key="index">
@@ -137,25 +137,14 @@
       ></VEmojiPicker>
     </v-overlay>
     <v-app-bar id="input-form" ref="inputForm" color="rgba(0,0,0,0)" flat>
-      <upload-btn
-        no-title-update
-        class="pa-0"
-        multiple
-        hover
-        icon
-        flat
-        round
-        small
-        depressed
-        max-width="15"
-        @file-update="updateFile"
-      >
-        <template slot="icon">
-          <v-icon>{{ icons.attach }}</v-icon>
-        </template>
-      </upload-btn>
-      <v-text-field v-model="message" class="mt-6" @keyup.enter="sendMessage">
-      </v-text-field>
+      <v-btn icon @click="">
+        <v-icon>{{ icons.attach }}</v-icon>
+      </v-btn>
+      <v-text-field
+        v-model="message"
+        class="mt-4 mx-2"
+        @keyup.enter="sendMessage"
+      ></v-text-field>
       <v-btn icon @click="overlay = !overlay">
         <v-icon>{{ icons.smile }}</v-icon>
       </v-btn>
@@ -184,13 +173,11 @@ import {
   mdiChevronDown,
 } from '@mdi/js'
 import { VEmojiPicker } from 'v-emoji-picker'
-// import UploadButton from 'vuetify-upload-button'
 export default {
   name: 'Chat',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     VEmojiPicker,
-    // 'upload-btn': UploadButton
   },
   props: {
     context: {
@@ -226,7 +213,12 @@ export default {
     users: [],
     displayUsernameArray: [],
   }),
-  watch: {},
+  watch: {
+    async context(newVal, oldVal) {
+      await this.websocket.close()
+      await this.initChat()
+    }
+  },
   computed: {
     chatImage() {
       return 'http://localhost:8000/media/' + this.context.image
@@ -236,26 +228,28 @@ export default {
     // setInterval(this.getMessages, 3000)
   },
   mounted() {
-    console.log('kj', 'http://localhost:8000/media/' + this.context.image)
-    this.$store.dispatch('setTheme', this.$i18n)
-    this.getUsers()
-    this.getMessages()
-    this.connectToWebSocket()
-
-    this.scrollToBottom()
-    this.checkIsDown()
-
-    this.$nextTick(function () {
-      this.matchHeight()
-      this.checkIsDown()
-    })
-    window.addEventListener('resize', this.matchHeight)
-    window.addEventListener('resize', this.checkIsDown)
+    this.initChat()
   },
   computed() {
     checkIsDown()
   },
   methods: {
+    initChat() {
+      this.$store.dispatch('setTheme', this.$i18n)
+      this.getUsers()
+      this.getMessages()
+      this.connectToWebSocket()
+
+      this.scrollToBottom()
+      this.checkIsDown()
+
+      this.$nextTick(function () {
+        this.matchHeight()
+        this.checkIsDown()
+      })
+      window.addEventListener('resize', this.matchHeight)
+      window.addEventListener('resize', this.checkIsDown)
+    },
     connectToWebSocket() {
       this.websocket = new WebSocket(
         `ws://127.0.0.1:8000/ws/chat/${this.context.uri}/`,
@@ -277,15 +271,7 @@ export default {
       console.log(this.$el.querySelector('#messageContainer').scrollHeight)
       console.log(this.$el.querySelector('#messageContainer').scrollTopMax)
       console.log(this.$el.querySelector('#messageContainer').scrollTop)
-      if (
-        this.$el.querySelector('#messageContainer').scrollTop ===
-        this.$el.querySelector('#messageContainer').scrollTopMax
-      ) {
-        setTimeout(() => {
-          this.scrollToBottom(), 2000
-        })
-      }
-
+      
       if (message.message.user.id == this.$store.state.user.id) {
         this.displayUsernameArray.push(0)
       } else {
@@ -298,7 +284,15 @@ export default {
 
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
-      console.log('FFF', message.message)
+      
+      if (
+        this.$el.querySelector('#messageContainer').scrollTop ===
+        this.$el.querySelector('#messageContainer').scrollTopMax
+      ) {
+        setTimeout(() => {
+          this.scrollToBottom(), 2000
+        })
+      }
     },
     onError(event) {
       alert('An error occured:', event.data)
@@ -339,6 +333,7 @@ export default {
         this.inviteCount++
         this.inviteUserName = null
         this.getMessages()
+        this.getUsers()
       }
     },
     updateFile(file) {
@@ -349,9 +344,22 @@ export default {
       this.$axios
         .get(`http://127.0.0.1:8000/api/users/all/`)
         .then((response) => {
-          this.users = response.data.users.filter(
-            (u) => u !== this.$store.getters.getUser.username
-          )
+          // this.users = response.data.users.filter(
+          //   (u) => u !== this.$store.getters.getUser.username
+          // )
+
+          this.users = []
+          for (let u of response.data.users) {
+            let b = 0
+            for (let m of this.context.members) {
+              if (u === m.username) {
+                b = 1
+                break
+              }
+            }
+            if (!b)
+              this.users.push(u)
+          }
         })
         .catch((error) => {
           console.log(error)
@@ -413,7 +421,7 @@ export default {
         })
       )
       this.clearMessage()
-      // this.scrollToBottom()
+      this.scrollToBottom()
     },
     makeAudioMessage() {
       alert('Audio done!')
