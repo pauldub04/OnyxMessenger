@@ -105,7 +105,10 @@
           :class="index === context.messages.length-1 ? 'ma-0 mb-15' : 'ma-0 mb-1'"
         >
           <v-card class="ml-2 grey darken-3" max-width="350px" elevation="0">
-            <template v-if="context.members.length > 2 && displayUsernameArray[index]">
+            <template v-if="context.members.length > 2 && 
+              message.user.id != $store.state.user.id &&
+              (index == 0 || message.user.id != context.messages[index-1].user.id)"
+            >
               <v-card-text class="secondary--text font-weight-medium pb-0 pt-2">{{ message.user.username }}</v-card-text>
               <v-card-text class="white--text pt-0 pb-2">{{ message.message }}</v-card-text>
             </template>
@@ -211,7 +214,6 @@ export default {
     inviteCount: 0,
     inviteUserName: null,
     users: [],
-    displayUsernameArray: [],
   }),
   watch: {
     async context(newVal, oldVal) {
@@ -272,16 +274,6 @@ export default {
       console.log(this.$el.querySelector('#messageContainer').scrollTopMax)
       console.log(this.$el.querySelector('#messageContainer').scrollTop)
       
-      if (message.message.user.id == this.$store.state.user.id) {
-        this.displayUsernameArray.push(0)
-      } else {
-        if (this.context.messages.length == 0 || 
-          message.message.user.id != this.context.messages[this.context.messages.length-1].user.id)
-          this.displayUsernameArray.push(1)
-        else
-          this.displayUsernameArray.push(0)
-      }
-
       this.context.messages.push(message.message)
       this.context.lastMessage = message.message.message
       
@@ -375,18 +367,6 @@ export default {
           this.context.members = response.data.members
           if (response.data.messages.length != 0)
             this.context.lastMessage = response.data.messages[response.data.messages.length - 1].message
-
-          this.displayUsernameArray = []
-          for (let ind in this.context.messages) {
-            if (this.context.messages[ind].user.id == this.$store.state.user.id) {
-              this.displayUsernameArray.push(0)
-              continue
-            }
-            if (ind == 0 || this.context.messages[ind].user.id != this.context.messages[ind-1].user.id)
-              this.displayUsernameArray.push(1)
-            else
-              this.displayUsernameArray.push(0)
-          }
         })
         .catch((error) => {
           console.log(error)
