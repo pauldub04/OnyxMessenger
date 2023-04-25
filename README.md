@@ -22,7 +22,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### Фронтенд-сервера:
+### Фронтенд-сервер:
 ```bash
 cd web_frontend
 npm install
