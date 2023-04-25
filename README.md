@@ -1,3 +1,2 @@
-# Messenger
-
-Our final project here
+# OnyxMessenger
+Мессенджер для обмена сообщениями и файлами с красивым и удобным дизайном.
