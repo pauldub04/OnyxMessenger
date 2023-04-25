@@ -37,6 +37,18 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-list-item :to="localePath('/create-chat')">
+        <v-list-item-icon>
+          <v-icon> mdi-pen </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ $t('pages.NavigationDrawer.createChat') }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item :to="localePath('/settings')">
         <v-list-item-icon>
           <v-icon> mdi-cog </v-icon>
@@ -45,17 +57,6 @@
         <v-list-item-content>
           <v-list-item-title>
             {{ $t('pages.NavigationDrawer.settings') }}
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item :to="localePath('/create-chat')">
-        <v-list-item-icon>
-          <v-icon> mdi-message-text </v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ $t('pages.NavigationDrawer.createChat') }}
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -96,7 +97,7 @@ export default {
         { label: 'Настройки', icon: 'mdi-cog', link: '/settings' },
         {
           label: 'Создать чат',
-          icon: 'mdi-message-text',
+          icon: 'mdi-pen',
           link: '/create-chat',
         },
       ],
